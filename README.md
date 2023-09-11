@@ -53,77 +53,68 @@ TiDB 13.4%
     <th>数据库系统</th>
   </tr>
   <tr>
-    <td>背景</td>
+    <td rowspan="5">背景</td>
     <td>时间</td>
     <td>20世纪50年代末</td>
     <td>60年代中期</td>
     <td>60年代末</td>
   </tr>
   <tr>
-    <td></td>
     <td>应用背景</td>
     <td>/</td>
     <td>科学计算、管理</td>
     <td>大规模管理</td>
   </tr>
   <tr>
-    <td></td>
     <td>硬件背景</td>
     <td>无直接存储设备</td>
     <td>磁盘、磁鼓</td>
     <td>大容量磁盘</td>
   </tr>
   <tr>
-    <td></td>
     <td>软件背景</td>
     <td>无OS</td>
     <td>有文件系统</td>
     <td>有DBMS</td>
   </tr>
   <tr>
-    <td></td>
     <td>处理方式</td>
     <td>批处理</td>
     <td>联机和批处理</td>
     <td>联机和批处理</td>
   </tr>
   <tr>
-    <td>特点</td>
+    <td rowspan="6">特点</td>
     <td>数据管理者</td>
     <td>人</td>
     <td>文件系统</td>
     <td>DBMS</td>
   </tr>
   <tr>
-    <td></td>
     <td>数据面向对象</td>
     <td>/</td>
     <td>某一应用程序</td>
     <td>现实世界</td>
   </tr>
   <tr>
-    <td></td>
     <td>数据共享程度</td>
     <td>无，冗余大</td>
     <td>共享性差，冗余较大</td>
     <td>共享性高冗余小</td>
   </tr>
   <tr>
-    <td></td>
     <td>数据独立性</td>
     <td>无</td>
     <td>独立性差（无逻辑）</td>
     <td>有高度独立性</td>
   </tr>
   <tr>
-    <td></td>
     <td>数据结构化</td>
     <td>无</td>
     <td>记录有结构，整体无</td>
     <td>结构化：数据模型描述</td>
   </tr>
   <tr>
-    <td></td>
     <td>数据控制能力</td>
     <td>/</td>
     <td>应用程序控制</td>
