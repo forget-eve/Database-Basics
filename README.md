@@ -391,7 +391,7 @@ M ---|1| O(参考书)
   </p>
 </P>
 
-### 1.3.2 数据库系统的体系结构（从最终用户角度来看）
+### 1.3.2 数据库系统的体系结构(从用户角度来看)
 - 单用户DBS 
 - 主从式结构DBS（终端方式） 
 - 客户/服务器结构DBS 
@@ -491,6 +491,13 @@ I --> H
 ### 1.5.4 数据库应用
 - [x] 各种用户的数据视图
 
+<P align="center">
+  <img src="./img/各种用户的数据视图.png" alt="各种用户的数据视图">
+  <p align="center">
+    <span>各种用户的数据视图</span>
+  </p>
+</P>
+
 - [x] DBA 的职责
   > - 设计与定义数据库
   > - 帮助最终用户使用数据库
@@ -515,4 +522,590 @@ I --> H
 - 具有关系代数和关系演算双重特点的语言 SQL
 
 ## 2.2 关系数据结构
-### 
+### 2.2.1 关系
+#### 定义
+- ***域*** ：域是一组具有相同数据类型的值的集合。值的个数称为域的基数
+- ***笛卡儿乘积*** :给定一组域: $D_1$ ， $D_2$，… $D_n$ ，域可以相同，定义 $D_1D_2…D_n$ 的笛卡儿乘积为: $D_1×D_2×……×D_n＝\lbrace(d_1，d_2，…d_n) |d_i∈D_i，i＝1，2，…n \rbrace$ ; $（d_1，d_2，…d_n）$ 称为一个元组
+- ***关系(Relation)*** ：笛卡儿乘积 $D_1×D_2×…×D_n$ 的任一子集 $D^{\'}$ ，称作 $D_1，D_2，…D_n$ 上的关系。  用 $R（D_1，D_2……D_n）$ 来表示 $D^{\'}$ 中的每个元素 $（d_1，d_2，…d_n）$ 是关系的一个元组 实际应用中关系往往是笛卡儿乘积中有意义的子集构成 n＝1是单元关系/一元关系；n＝2是二元关系
+#### 举例
+- 域
+  - [x] 性别集＝{男、女}。基数＝2
+  - [x] 月份集＝{1，2，3，4，5，6，7，8，9，10，11，12}，基数＝12
+- 笛卡儿乘积
+  - [x] $D_1$ ＝姓名集合＝{赵一平，钱峰，孙英}
+  - [x] $D_2$ ＝性别集合＝{男，女}
+  - [x] $D_3$ ＝年龄集合＝{16，17，18}
+- 关系
+
+<div align="center">
+	<table>
+  <tr>
+    <th>姓名</th>
+    <th>性别</th>
+    <th>年龄</th>
+  </tr>
+  <tr>
+    <td>赵一平</td>
+    <td>男</td>
+    <td>16</td>
+  </tr>
+  <tr>
+    <td>钱峰</td>
+    <td>男</td>
+    <td>17</td>
+  </tr>
+  <tr>
+    <td>孙英</td>
+    <td>女</td>
+    <td>17</td>
+  </tr>
+</table>
+</div>
+
+### 2.2.2 关系模式
+- 关系的描述称为 ***关系模式（Relation schema ）,一般表示为R(U,D,DOM,F)*** 其中，R是关系名，U是组成该关系的属性集合，D为属性组U中属性所来自的域，DOM是属性向域的映象集合，F是属性间数据的依赖关系集合。
+### 2.2.3 关系数据库
+- 在一个给定的现实世界领域里，所有实体及实体间的联系的关系所构成的集合是一个关系数据库
+- 关系数据库有型和值之分：关系数据库的型也称关系数据库模式，是对关系数据库的描述它包括若干域的定义以及在这些域上定义的若干关系模式；关系数据库的值也称为关系数据库，是这些关系模式在某一时刻对应的关系的集合
+- 关系数据库的值与关系数据库模式通称为关系数据库 
+## 2.3 关系的完整性
+- ***实体完整性***
+	> 若属性A是基本关系R的主属性，则A不能取空值 
+- ***参照完整性***
+  > 若属性（或属性组）F是基本关系R的外码，它与基本关系S的主码Ks相对应（关系R、S不一定是不同的关系），则对于R中的每一个元组在F上的取值必须:
+  > > 取空值（F的每个属性值均取空值）
+  > > 等于S中某个元组的主码值
+- ***自定义完整性***
+
+## 2.4 关系代数
+- 关系代数由一组关系运算组成，是对于关系的操作集。关系运算以一个或多个关系作为操作的对象，运算结果是一个新的关系。用关系运算实现查询。
+- 关系代数运算符
+  > - [x] 集合运算符： $\cup (并) －(差) \cap (交) ×(笛卡儿积)$
+  > - [x] 专门运算符： $\sigma \ 选择 \ \Pi \ 投影 \ \bowtie \ 连接 \ ÷ \ 除$
+  > - [x] 比较运算符： $> \ ≥ \ < \ ≤ \ = \ ≠$
+  > - [x] 逻辑运算符： $┑ 非 ∧与 ∨或$
+- 常用的关系运算
+  > 交、并、差、笛卡儿积、投影、选择、连接、除
+- 基本关系运算有
+	> 并、差、笛卡儿积、投影、选择
+- 同类关系：具有相同的度，且两个关系每个属性属同一个域
+
+### 2.4.1 传统的集合运算
+
+<div align="center">
+	<table>
+  <tr>
+    <th>Name</th>
+    <th>Sex</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Zhang</td>
+    <td>F</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>Wang</td>
+    <td>M</td>
+    <td>25</td>
+  </tr>
+  <tr>
+    <td>Lu</td>
+    <td>M</td>
+    <td>37</td>
+  </tr>
+  <tr>
+    <td>Chen</td>
+    <td>F</td>
+    <td>27</td>
+  </tr>
+</table>
+<p align="center">
+	<span>R</span>
+</p>
+</div>
+
+<div align="center">
+	<table>
+  <tr>
+    <th>Name</th>
+    <th>Sex</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Zhang</td>
+    <td>F</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>Wang</td>
+    <td>M</td>
+    <td>25</td>
+  </tr>
+  <tr>
+    <td>Lu</td>
+    <td>F</td>
+    <td>30</td>
+  </tr>
+  <tr>
+    <td>Sun</td>
+    <td>M</td>
+    <td>28</td>
+  </tr>
+</table>
+<p align="center">
+	<span>S</span>
+</p>
+</div>
+
+- [x] 并（Union）：
+	> 同类关系R和S的并记为 $R \cup S$ ，或 $R \ union \ S$
+ 	> 
+ 	> 定义: $R \cup S=\lbrace t|t∈R ∨ t \in S\rbrace$ 注意去除重复元组 
+- $R \cup S$
+
+<div align="center">
+	<table>
+  <tr>
+    <th>Name</th>
+    <th>Sex</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Zhang</td>
+    <td>F</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>Wang</td>
+    <td>M</td>
+    <td>25</td>
+  </tr>
+  <tr>
+    <td>Lu</td>
+    <td>M</td>
+    <td>37</td>
+  </tr>
+  <tr>
+    <td>Chen</td>
+    <td>F</td>
+    <td>27</td>
+  </tr>
+  <tr>
+    <td>Lu</td>
+    <td>F</td>
+    <td>30</td>
+  </tr>
+  <tr>
+    <td>Sun</td>
+    <td>M</td>
+    <td>28</td>
+  </tr>
+</table>
+</div>
+
+- [x] 交（Intersection）
+	> 同类关系R和S的交记为 $R \cap S$，或 $R \ intersect \ S$
+ 	> 
+ 	> 定义: $R \cap S＝\lbrace t|t \in R \land t\in S \rbrace \equiv R－（R－S）$
+- $R \cap S$
+
+<div align="center">
+	<table>
+  <tr>
+    <th>Name</th>
+    <th>Sex</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Zhang</td>
+    <td>F</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>Wang</td>
+    <td>M</td>
+    <td>25</td>
+  </tr>
+</table>
+</div>
+
+- [x] 差（Minus/Difference）
+	> 同类关系R和S的差记为 $R－S$ 或 $R \ minus \ S$
+ 	> 
+	> 定义: $R－S＝\lbrace t|t \in R \land t \notin S \rbrace$
+- $R－S$
+
+<div align="center">
+	<table>
+  <tr>
+    <th>Name</th>
+    <th>Sex</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Lu</td>
+    <td>M</td>
+    <td>37</td>
+  </tr>
+  <tr>
+    <td>Chen</td>
+    <td>F</td>
+    <td>27</td>
+  </tr>
+</table>
+</div>
+
+- [x] 笛卡儿积（Cartesian Product）
+	> 关系R和S的笛卡儿积记为 $R×S$
+ 	> 
+	> 定义: $R×S＝\lbrace t⌒s|t \in R， s \in S \rbrace $
+
+<div align="center">
+	<p align="center"><span>R</span></p>
+	<table>
+  <tr>
+    <th>CNo</th>
+    <th>CN</th>
+  </tr>
+  <tr>
+    <td>C-11</td>
+    <td>OS</td>
+  </tr>
+  <tr>
+    <td>C-21</td>
+    <td>DB</td>
+  </tr>
+</table>
+<p align="center"><span>S</span></p>
+<table>
+  <tr>
+    <th>SNo</th>
+    <th>SN</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>S-01</td>
+    <td>Huang</td>
+    <td>21</td>
+  </tr>
+  <tr>
+    <td>S-21</td>
+    <td>Lin</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td>S-30</td>
+    <td>Shao</td>
+    <td>22</td>
+  </tr>
+</table>
+<p align="center"><span>R×S</span></p>
+	<table>
+  <tr>
+    <th>CNo</th>
+    <th>CN</th>
+    <th>SNo</th>
+    <th>SN</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>C-11</td>
+    <td>OS</td>
+    <td>S-01</td>
+    <td>Huang</td>
+    <td>21</td>
+  </tr>
+  <tr>
+    <td>C-11</td>
+    <td>OS</td>
+    <td>S-21</td>
+    <td>Lin</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td>C-11</td>
+    <td>OS</td>
+    <td>S-30</td>
+    <td>Shao</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>C-21</td>
+    <td>DB</td>
+    <td>S-01</td>
+    <td>Huang</td>
+    <td>21</td>
+  </tr>
+  <tr>
+    <td>C-21</td>
+    <td>DB</td>
+    <td>S-21</td>
+    <td>Lin</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td>C-21</td>
+    <td>DB</td>
+    <td>S-30</td>
+    <td>Shao</td>
+    <td>22</td>
+  </tr>
+</table>
+</div>
+
+### 2.4.2 专门的关系运算
+- 引入以下记号 : 设关系模式R（ $A_1，A_2，…，A_n$ ），它的一个关系为 $R_t$ ， $t∈R_t$ 表示t是 $R_t$ 的一个元组。 $t[A_i]$ 则表示元组t中相应于 $A_i$ 的一个分量
+- 若 $A＝\lbrace A_{i1}，A_{i2}，…，A_{ik}\rbrace$ 是 $A_1，A_2，…，A_n$ 的一部分，k<=n，则A称为属性列（组）或域列。 $t[A]=(t[A_{i1}]，t[A_{i2}]，…，t[A_{ik}])$ 表示元组在属性列A上诸分量的集合
+- R为n元关系，S为m元关系。tr∈R，ts∈S， **$tr ⌒ ts$ 称为元组的连接（Concatenation）** 。它是一个m＋n列的元组，前n个分量为R中的一个n元组，后m个分量为S中的一个m元组
+- 给定一个关系R（X，Z），X和Z为属性组，定义：当t[X]=x时，x在R中的象集（image set）为 Zx={t[Z]|t∈R，t[X]=x}，表示R中属性组X上值为x的诸元组在Z属性组上的分量的集合
+#### 投影（Projection） 
+- 关系R上的投影是从R中选择出若干属性，并且去掉重复元组组成一个新关系，属于单目运算 
+- 记作: $\Pi_A(R)＝\lbrace t[A]| t \in R \rbrace$ A为R中的属性列 
+- [x] 举例：
+> _**假设Student**_
+
+<div align="center">
+	<table>
+  <tr>
+    <th>SNo</th>
+    <th>SName</th>
+    <th>Sex</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>S01</td>
+    <td>Wang</td>
+    <td>F</td>
+    <td>17</td>
+  </tr>
+  <tr>
+    <td>S02</td>
+    <td>Zhang</td>
+    <td>M</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td>S03</td>
+    <td>Lin</td>
+    <td>M</td>
+    <td>18</td>
+  </tr>
+  <tr>
+    <td>S04</td>
+    <td>Sun</td>
+    <td>F</td>
+    <td>19</td>
+  </tr>
+</table>
+</div>
+
+> $S_{na}=\Pi_{Sname，Age}(Student)$
+
+<div align="center">
+	<table>
+  <tr>
+    <th>SName</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Wang</td>
+    <td>17</td>
+  </tr>
+  <tr>
+    <td>Zhang</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td>Lin</td>
+    <td>18</td>
+  </tr>
+  <tr>
+    <td>Sun</td>
+    <td>19</td>
+  </tr>
+</table>
+</div>
+
+#### 选择（Selection） 
+- 又称限制（Restriction），在给定的关系R中，抽出满足条件的元组，组成一个新关系，新关系与原关系同类，是原关系一个子集
+- 记做: $\sigma_F(R)=\lbrace t| t \in R \land F（t）='真'\rbrace$ F表示条件 
+> $S_{a18}=\sigma_{age>=18}(Student)$
+
+<div align="center">
+	<table>
+  <tr>
+    <th>SNo</th>
+    <th>SName</th>
+    <th>Sex</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>S02</td>
+    <td>Zhang</td>
+    <td>M</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td>S03</td>
+    <td>Lin</td>
+    <td>M</td>
+    <td>18</td>
+  </tr>
+  <tr>
+    <td>S04</td>
+    <td>Sun</td>
+    <td>F</td>
+    <td>19</td>
+  </tr>
+</table>
+</div>
+
+#### 连接(Join)
+- 从两个关系的笛卡儿乘积中选取属性满足一定条件的元组，组成新的关系 
+- 记做: $R \bowtie_{A\theta B} S ＝\lbrace tr⌒ts| tr\in R \land ts\in S \land tr[A]\theta ts[B]\rbrace \equiv \sigma_{A\theta B}(R×S)$  
+- $A\theta B$ 表示R上的属性A和S上的属性B满足 $\theta$ 条件， $\theta$ 是比较运算符，A、B的度数相等且可比。这里假设AB分别在R、S关系的第i、j列，R度为r 
+##### 等值连接(equi-join)
+- $\theta$ 为“＝”时称为等值连接
+	> 记: $R \bowtie_{A=B} S ＝\lbrace tr⌒ts| tr\in R \land ts\in S \land tr[A]＝ts[B]\rbrace$
+##### 自然连接(Natioal Join)
+- 两个关系中具有相同的属性，并且在相同的属性上做等值连接。自然连接需要取消重复列，而等值连接不需要 。
+	> 记: $R \bowtie S ＝\lbrace tr⌒ts| tr∈R ∧ts∈S ∧ tr[A]＝ts[A]\rbrace$
+##### 举例
+
+<div align="center">
+	<p align="center">R<span></span></p>
+	<table>
+  <tr>
+    <th>A</th>
+    <th>C</th>
+    <th>D</th>
+  </tr>
+  <tr>
+    <td>30</td>
+    <td>C1</td>
+    <td>D3</td>
+  </tr>
+  <tr>
+    <td>40</td>
+    <td>C2</td>
+    <td>D3</td>
+  </tr>
+  <tr>
+    <td>50</td>
+    <td>C3</td>
+    <td>D1</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>C4</td>
+    <td>D1</td>
+  </tr>
+</table>
+	<p align="center">R<span></span></p>
+	<table>
+  <tr>
+    <th>B</th>
+    <th>E</th>
+    <th>F</th>
+  </tr>
+  <tr>
+    <td>20</td>
+    <td>E1</td>
+    <td>F1</td>
+  </tr>
+  <tr>
+    <td>50</td>
+    <td>E2</td>
+    <td>F3</td>
+  </tr>
+  <tr>
+    <td>40</td>
+    <td>E3</td>
+    <td>F1</td>
+  </tr>
+</table>
+</div>
+
+> **$R \bowtie_{A > B} S$**
+
+<div align="center">
+	<table>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+    <th>D</th>
+    <th>E</th>
+    <th>F</th>
+  </tr>
+  <tr>
+    <td>30</td>
+    <td>20</td>
+    <td>C1</td>
+    <td>D3</td>
+    <td>E1</td>
+    <td>F1</td>
+  </tr>
+  <tr>
+    <td>40</td>
+    <td>20</td>
+    <td>C2</td>
+    <td>D3</td>
+    <td>E1</td>
+    <td>F1</td>
+  </tr>
+  <tr>
+    <td>50</td>
+    <td>20</td>
+    <td>C3</td>
+    <td>D1</td>
+    <td>E1</td>
+    <td>F1</td>
+  </tr>
+  <tr>
+    <td>50</td>
+    <td>40</td>
+    <td>C3</td>
+    <td>D1</td>
+    <td>E3</td>
+    <td>F1</td>
+  </tr>
+</table>
+</div>
+
+#### 除法(Division)
+- 给定关系R（X，Y）和S（Y，Z），其中X，Y，Z为属性组，R中的Y与S中的Y可以不同属性名，但必须有相同的域。记R÷S。令P（X）＝R÷S，则P是R中满足以下条件的元组在X属性列上的投影：元组在X上的分量值x的象集 $Y_x$包含S在Y上投影的集合
+> 记做: $R÷S＝\lbrace tr[X]|tr\in R \land Y_x\supseteq\Pi_Y(S)\lbrace$
+>
+> $R÷S \equiv \Pi_X(R)－\Pi_X((\Pi_X(R)×\Pi_Y(S))－R) $
+##### 举例
+
+<P align="center">
+  <img src="./img/除法.png" alt="除法">
+  <p align="center">
+    <span>除法</span>
+  </p>
+</P>
+
+#### 外连接(Outer Join)
+- 如果R和S在做自然连接时，把该舍弃的元组也保存在新关系中，在新增加的属性上填空值（null），这种操作称为“外连接”。如果把R中该舍弃的元组保留在新关系中称左连接；把S中该舍弃的元组保留在新关系中称右连接 
+#### 外部并(Outer Union) 
+- 若关系R和S不同类，则新关系的属性由R和S的属性组成，公共属性只取一次，新关系的元组由属于R或S的元组构成，新增的属性上均填空（null） 
+#### 半连接(Semijoin)
+- 关系R和S的半连接定义为R和S的自然连接在关系R的属性集上的投影
+
+> 举例：
+
+<P align="center">
+  <img src="./img/其他1.png" alt="举例1">
+  <p align="center">
+    <span>举例1</span>
+  </p>
+</P>
+<P align="center">
+  <img src="./img/其他2.png" alt="举例2">
+  <p align="center">
+    <span>举例2</span>
+  </p>
+</P>
