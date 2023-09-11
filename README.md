@@ -1082,7 +1082,7 @@ I --> H
 ##### 举例
 
 <P align="center">
-  <img src="./img/除法.png" alt="除法">
+  <img src="./img/除法1.png" alt="除法">
   <p align="center">
     <span>除法</span>
   </p>
