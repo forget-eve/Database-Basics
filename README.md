@@ -1241,4 +1241,31 @@ I --> H
 	- [x] 关系完备系统：支持关系结构和所有关系代数操作
 	- [x] 全关系系统：支持关系模型的所有特征。 
 
- 
+ # 第三章 关系数据库标准查询语言SQL 
+##  3.1 SQL概述
+- SQL(Standard/Structured Query Language)是关系数据库标准 - 1986年10月，美国国家标准局（American National Standard Institute ANSI）公布第一个标准ANSI X3.135-1986，国际标准化组织（International Organization for Standardization ISO）也通过这一标准称SQL－86 
+- 1989年ANSI再次公布标准ANSI X3.135-1989 ，ISO 相应SQL－89 
+- 1999年，ISO公布 SQL-1999（SQL99，SQL3） 
+- 2003年，ISO公布 SQL-2003
+
+### 3.1.1 SQL语言的组成
+- [x] 数据定义（DDL Data Definition/Description Language ）
+  > 定义数据库的逻辑结构，包括基本表、视图、索引等
+- [x] 数据操纵（DML Data Manipulation Language） 
+  > 包括查询和更新，更新又包含插入、删除和修改 
+- [x] 数据控制（DCL Data Control Language  ）  
+  > 授权、完整性规则描述、事务控制等 
+- [x] 嵌入式SQL（ESQL）
+  > 在宿主语言中使用SQL的规则
+
+### 3.1.2 SQL语言的特点 
+- [x] 综合统一：集DDL、DML、DCL于一体，语言风格统一 
+- [x] 面向集合的操作方式：操作对象、查询结果都可以是元组的集合 
+- [x] 高度非过程化：存取路进透明。
+- [x] 以统一的语法结构提供两种使用方式：自含式、嵌入式
+- [x] 语言简洁，易学易用，主要共使用11个关键词
+  > DDL：create drop alter
+  >
+  > DML：select insert delete update
+  >
+  > DCL：grant revoke commit rollback 
