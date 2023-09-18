@@ -1112,3 +1112,71 @@ I --> H
     <span>举例2</span>
   </p>
 </P>
+
+### 2.4.3* 关系代数运算应用举例
+- [x] 假设
+	> S(S＃,SN,SSEX,SAGE)
+ 	> 
+	> C(C＃,CN,TEACHER)
+ 	> 
+	> SC(S＃,C＃,GRADE)
+- 检索学习课程号为C2的学生学号与成绩 
+	> $\Pi_{S＃,GRADE}(\sigma_{C＃='C2'}(SC))$ 或 $\Pi_{1,3}(\delta_{2='C2'}(SC))$
+- 检索学习课程号为C2的学生学号与姓名 
+	> $\Pi_{S＃,SN}(\sigma_{C＃='C2'}(S \bowtie SC))$ 
+- 检索选修课程名为Maths的学生学号与姓名 
+	> $\Pi_{S＃,SN}(\sigma_{CN='Maths'}(S \bowtie SC \bowtie C))$ 
+- 检索选修课程为C2或C4的学生学号 
+	> $\Pi_{S＃}(\sigma_{C＃='C2'∨C＃='C4'}(SC))$
+- 检索至少选修课程为C2和C4的学生学号 
+	> $\Pi_{S＃}(\sigma_{1=4∧2='C2'∧5='C4'}(SC×SC))$
+- 检索不选修C2课程的学生姓名与年龄 
+	> $\Pi_{SN，SAGE}(S)－\Pi_{SN，SAGE}(\sigma_{C＃='C2'}(SC \bowtie S))$
+- 检索选修全部课程的学生姓名 
+	> $\Pi_SN(S \bowtie (\Pi_{S＃,C＃}(SC)\div \Pi_{C＃}(C)))$ 
+- 检索所学课程包含学生S3所学课程的学生学号 
+	> $\Pi_{S＃,C＃}(SC) \div \Pi_{C＃}(\sigma_{S＃='S3'}(SC))$
+
+### 2.4.4 关系代数式的等价规则
+1. 连接、笛卡尔积交换律
+	> - $E_1×E_2 ≡ E_2×E_1$
+ 	> - $E1 \bowtie E_2 ≡ E_2 \bowtie E_1$
+ 	> - $E1 \bowtie_F E_2 ≡ E_2 \bowtie_F E_1$
+2. 连接、笛卡尔积结合律
+	> - $(E_1×E_2) ×E_3 ≡ E_1×(E_2×E_3)$
+	> - $(E_1 \bowtie E_2) \bowtie E_3 ≡ E_1 \bowtie (E_2 \bowtie E_3)$
+	> - $(E_1 \bowtie_{F_1} E_2) \bowtie_{F_2} E_3 ≡ E_1 \bowtie_{F_1}(E_2 \bowtie_{F_2} E_3)$
+3. 投影的串接定律
+	> - $\Pi_{A_1,A_2,…,A_n}(\Pi_{A_{k_1},A_{k_2},…,A{k_m}}(R))≡\Pi_{A_1,A_2,…,A_n}(R)$ , $A_1,A_2,…,A_n$ 是 $A_{k_1},A_{k_2},…,A_{k_m}$ 的子集
+4. 选择的串接定律
+	> - $\sigma_{F_1}(\sigma_{F_2}(R)) ≡ \sigma{F_1∧F_2}(R)$
+5. 选择与投影的交换律
+	> - $\Pi_{A_1,A_2,…,A_n}(\sigma_F(R)) ≡ \sigma_F(\Pi_{A_1,A_2,…,A_n}(R))$
+	> - $\Pi_{A_1,A_2,…,A_n}(\sigma_F(R))≡\Pi_{A_1,A_2,…,A_n}(\sigma_F(\Pi_{A_1,A_2,…,A_n,B_1,B_2,…,B_n}(R)))$
+	> > 例： $\Pi_A (\sigma_{R.A=S.B}(R×S))$ ≡ $\Pi_A (\sigma_{R.A=S.B}(\Pi_{A,B}(R×S)))$ ≡ $\Pi_A (\sigma_{R.A=S.B}(\Pi_A(R)×\Pi_B(S)))$
+6. 选择对笛卡尔积的分配率
+	> - $\sigma_F(E_1×E_2)≡\sigma_{F_1}(E_1)×\sigma_{F_2}(E_2)$
+	> > $F=F_1∧F_2$ , $F_1$ 只涉及 $E_1$ ，$F_2$ 只涉及 $E_2$
+ 	> - $\sigma_F(E_1×E_2)≡ \sigma_F(E_1)×E_2$
+ 	> > F只涉及 $E_1$
+ 	> - $\sigma_F(E_1×E_2)≡\sigma_{F2}(\sigma_{F_1}(E_1)×E_2)
+	> > $F_1$ 只涉及 $E_1$ ， $F_2$ 涉及 $E_1$ ， $E_2$
+7. 选择对并的分配率
+	> - $\sigma_F(E_1 \cup E_2)≡\sigma_{F_1}(E_1)\cup \sigma_{F_2}(E_2)$
+8. 选择对差的分配率
+	> - $\sigma_F(E_1 - E_2)≡\sigma_{F_1}(E_1) - \sigma_{F_2}(E_2)$
+9. 投影对笛卡尔积的分配率
+	> - $\Pi_{A_1,A_2,…,A_n,B_1,B_2,…,B_n}(E_1×E_2)≡ \Pi_{A_1,A_2,…,A_n}(E+1)×\Pi_{B_1,B_2,…,B_n}(E2)$ ,其中 $A_1,A_2,…,A_n$ 是 $E_1$ 属性， $B_1,B_2,…,B_n$ 是 $E_2$ 属性
+10. 投影对并的分配率
+	> - $\Pi_{A_1,A_2,…,A_n}(E_1 \cup E_2)≡\Pi_{A_1,A_2,…,A_n}(E_1)\cup \Pi_{A_1,A_2,…,A_n}(E_2)$
+11. 选择对自然连接的分配率
+	> - $\sigma_F(E_1 \bowtie E_2)≡\sigma_{F_1}(E_1) \bowtie \sigma_{F_2}(E_2)$
+	> > $F=F_1∧F_2$ , $F_1$ 只涉及 $E_1$ ， $F_2$ 只涉及 $E_2$
+12. 选择与连接操作的结合率
+	> - $\sigma_{F}(E_1×E_2)≡E_1 \infty_F E_2$
+    > > F形如 $E_1.A \theta E_2.B$
+ 	> - $\sigma_{F_1}(E_1 \bowtie_{F_2} E_2)≡E_1 \bowtie_{F1∧F2} E_2$
+    > > $F_1$ , $F_2$ 形如 $E_1.A \theta E_2.B$
+
+
+ 
