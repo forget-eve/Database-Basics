@@ -1177,6 +1177,68 @@ I --> H
     > > F形如 $E_1.A \theta E_2.B$
  	> - $\sigma_{F_1}(E_1 \bowtie_{F_2} E_2)≡E_1 \bowtie_{F1∧F2} E_2$
     > > $F_1$ , $F_2$ 形如 $E_1.A \theta E_2.B$
+### 2.4.5 利用规则优化查询
+> 例：设学生选课系统中，学生关系S有1000条记录，每个学生平均选课10门，则SC关系有10000条记录，课程关系C有1000条记录。若需要查询学生“王芳”所选修课程的成绩在85分以上的课程名。
+> > 设 $F_1$ 表示S.sno=SC.sno、 $F_2$ 表示SC.cno=C.cno、 $F_3$ 表示S.sn='王芳'、 $F_4$ 表示SC.grade>=85
+> > > $\Pi_{cn}(\sigma_{F_1∧F_2∧F3∧F_4}(S×SC×C))$    $10^{10}$ 条连接记录 $O(10^{10})$
+> > >
+> > > $\Pi_{cn}(\sigma_{F_3∧F_4}(S\bowtie_{F_1}SC\bowtie_{F_2}C))$    $10^4$ 条记录，运算 $O(10^7)$
+> > >
+> > > $\Pi_{cn}(\sigma{F_3}(S)\bowtie\sigma_{F_4}(SC)\bowtie C))$      <=10条记录，运算 $O(10^4)$
+#### 优化过程
+> $\Pi_{cn}(\sigma_{F_1∧F_2∧F_3∧F_4}(S×SC×C))$   //①式
+>
+> $= \Pi_{cn}(\sigma_{F_3∧F_4}\sigma_{F_2}(\sigma_{F_1}((S×SC)×C)))$  //规则4，2
+>
+> $= \Pi_{cn}(\sigma_{F_3∧F_4}\sigma_{F_2}(\sigma_{F_1}(S×SC)×C))$  //规则6
+>
+> $= \Pi_{cn}(\sigma_{F_3∧F_4}\sigma_{F_2}((S\bowtie SC)×C))$    //规则12
+>
+> $= \Pi_{cn}(\sigma_{F_3∧F_4}((S\bowtie SC)\bowtie C))$    //规则12  ②式
+>
+> $= \Pi_{cn}(\sigma_{F_3}(S)\bowtie (\sigma_{F_4}(SC)\bowtie C)$    //规则11  ③式
 
+#### 基于语法树优化
+- 检索选修DB课程的女生学号及姓名。
+	> $\Pi_{sno,sname}(\sigma_{cname='db'∧sex='F'}(\sigma_{S.sno=SC.sno∧SC.cno=C.no}(S×SC×C)))$
+
+<P align="center">
+  <img src="./img/基于语法树优化1.png" alt="基于语法树优化1">
+  <p align="center">
+    <span>基于语法树优化1</span>
+  </p>
+</P>
+<P align="center">
+  <img src="./img/基于语法树优化2.png" alt="基于语法树优化2">
+  <p align="center">
+    <span>基于语法树优化2</span>
+  </p>
+</P>
+<P align="center">
+  <img src="./img/基于语法树优化3.png" alt="基于语法树优化3">
+  <p align="center">
+    <span>基于语法树优化3</span>
+  </p>
+</P>
+<P align="center">
+  <img src="./img/基于语法树优化4.png" alt="基于语法树优化4">
+  <p align="center">
+    <span>基于语法树优化4</span>
+  </p>
+</P>
+
+## 2.5关系演算** 
+### 2.5.1 元组关系演算语言ALPHA 
+### 2.5.2 域关系演算语言QBE 
+## 2.6 关系数据库管理系统 
+- 关系数据库管理系统简称关系系统
+- 一个数据库管理系统可成为关系系统的最小条件 
+	- [x] 关系数据库（即关系数据结构）
+	- [x] 支持选择、投影和连接运算  
+- E.F.Codd思想对关系系统的分类
+	- [x] 表式系统：仅只是关系数据结构，不支持集合级操作
+ 	- [x] 最小关系系统：支持关系结构和选择、投影、连接集合操作
+	- [x] 关系完备系统：支持关系结构和所有关系代数操作
+	- [x] 全关系系统：支持关系模型的所有特征。 
 
  
