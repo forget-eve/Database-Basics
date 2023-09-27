@@ -1159,7 +1159,7 @@ I --> H
 	> > $F=F_1∧F_2$ , $F_1$ 只涉及 $E_1$ ，$F_2$ 只涉及 $E_2$
  	> - $\sigma_F(E_1×E_2)≡ \sigma_F(E_1)×E_2$
  	> > F只涉及 $E_1$
- 	> - $\sigma_F(E_1×E_2)≡\sigma_{F2}(\sigma_{F_1}(E_1)×E_2)
+ 	> - $\sigma_F(E_1×E_2)≡\sigma_{F2}(\sigma_{F_1}(E_1)×E_2)$
 	> > $F_1$ 只涉及 $E_1$ ， $F_2$ 涉及 $E_1$ ， $E_2$
 7. 选择对并的分配率
 	> - $\sigma_F(E_1 \cup E_2)≡\sigma_{F_1}(E_1)\cup \sigma_{F_2}(E_2)$
