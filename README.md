@@ -1552,12 +1552,12 @@ $$WHERE \ F$$
 	> > SELECT S＃，SN FROM S WHERE SA < (SELECT MIN（SA） FROM S WHERE SD＝'IS') AND SD <> 'IS' ORDER BY SA DESC
 
 - [x] 带EXISTS的子查询(不返回任何数据，只返回Ture和False) 
-> 检索所有选修了课程号为'1'的学生姓名 
-> > SELECT SN FROM S WHERE EXISTS (SELECT * FROM SC WHERE S# = S.S# AND C# = '1')
-> > > _**注意：此例中子查询的查询条件依赖于外层父查询，称此类查询为相关子查询(corelated subquery)。**_
-> 
-> 等价连接实现：
-> > SELECT SN FROM S,SC WHERE S.S# = SC.S# AND C# = '1'
+	> 检索所有选修了课程号为'1'的学生姓名 
+	> > SELECT SN FROM S WHERE EXISTS (SELECT * FROM SC WHERE S# = S.S# AND C# = '1')
+	> > > _**注意：此例中子查询的查询条件依赖于外层父查询，称此类查询为相关子查询(corelated subquery)。**_
+	> 
+	> 等价连接实现：
+	> > SELECT SN FROM S,SC WHERE S.S# = SC.S# AND C# = '1'
 
 - [ ] SQL中没有(∀x)p，故须转换为¬(∃x(¬p)) 
 	> 如检索选修了全部课程的学生,即没有一门课没有选的学生
@@ -1640,3 +1640,125 @@ $$WHERE \ F$$
 	> > DELETE FROM SC WHERE ‘CS’=(SELECT SD FROM S WHERE S#=SC.S#) (相关子查询) 
 	> >
 	> > DELETE from SC where S# in (SELECT S# from S where SD=’CS’) (非相关子查询) 
+
+## 3.5 视图
+> 视图只是一个窗口，其数据依赖于基本表
+
+### 3.5.1 定义视图 
+#### 建立视图 
+- [x] 语法 ：
+	> CREATE VIEW <视图名> [(<列名1>[，<列名2>......])] AS <子查询>  [WITH CHECK OPTION] 
+
+- **_列名在以下情况必须列出_**
+	- [ ] 1. 子查询的目标列是集函数等，不是单纯的列
+	- [ ] 2. 多表连接时出现同名的列作为视图字段 
+	- [ ] 3. 需要在视图中启用新的名字  
+- [x] WITH CHECK OPTION 表示对视图更新时自动验证子查询条件 
+- [x] 行列子集视图：若一个视图是从单个基本表导出的，并且只是去掉了基本表的某些行和某些列，但保留了码，称行列子集视图 
+	> 例：建立学生视图 
+	> > CREATE VIEW IS_S AS SELECT S#, SN , SA FROM S WHERE SD = 'IS'
+
+- [x] 建立信息系选修了C1号课程的学生视图 
+	> CREATE VIEW IS_S1 (S#, SN ,GR) AS SELECT S.S# ,SN ,GR FROM S, SC WHERE S.S# = SC.S# AND S.SD='IS' AND SC.C# = 'C1' 
+
+- [x] 视图之上可以建立视图 
+	> 建立选修了C1课程且成绩在90以上的学生视图 
+	> > CREATE VIEW IS_S2 AS SELECT S#, SN, GR FROM IS_S1 WHERE GR>=90
+
+- [x] 其它视图建立例子
+	> 建立一个反映学生出生年月的视图 
+	> > CREATE VIEW BT_S（S＃，SN，SB）AS SELECT S#, SN,2003－SA FROM S  
+	>
+	> 建立一个学生学号和平均成绩的视图 
+	> > CREATE VIEW S_G（S＃，AVG_GR）AS SELECT S#, AVG(GR) FROM SC GROUP BY S# 
+	>
+	> 建立一个女学生的视图 
+	> > CREATE VIEW S_F（S＃，SN，SS，SA，SD）AS SELECT * FROM S  WHERE SS=’女’ 
+	> > > 本视图在S表结构改变时会出错，解决办法是去掉列说明或改*为列表
+
+#### 删除视图 
+- [x] 语法
+	> DROP VIEW <视图名>
+	> > 例子：删除视图IS_S
+	> > > DROP VIEW IS_S  
+### 3.5.2 查询视图 
+- [X] 把对视图的查询转化为对基本表的查询称为视图的消解(View Resolution) 
+	> SELECT S#，SA FROM IS_S WHERE SA < 20 
+	>
+	>  消解为:
+	>
+	> SELECT S# ,SA FROM S WHERE SD=’IS’ AND SA <20 
+	> 
+	> SELECT * FROM S_G WHERE AVG_GR>90
+	>
+	> 消解为:
+	>
+	> SELECT S#, AVG(GR) FROM SC WHERE AVG(GR)>90 GROUP BY S# &nbsp; &nbsp; &nbsp; (错误)
+	>
+	> SELECT S#, AVG(GR) FROM SC GROUP BY S# HAVING AVG(GR)>90 &nbsp; &nbsp; &nbsp; (正确)
+### 3.5.3 更新视图 
+#### 视图的修改 
+- [x] 将信息系学生视图中学号为S001的学生姓名改为'刘辰'
+	> UPDATE IS_S SET SN='刘辰' WHERE S#='S001' 
+	>
+	> 视图消解为：
+	>
+	> UPDATE S SET SN='刘辰' WHERE S#='S001' AND SD='IS' 
+
+#### 视图的插入 
+- [x] 在信息系学生视图中插入记录 
+	> INSERT INTO IS_S VALUES ('S001','刘辰',20) 
+	>
+	> 视图消解： 
+	>
+	> INSERT INTO S VALUES ('S001','刘辰',NULL,20,'IS') 
+
+#### 视图的删除： 
+- [X] 在信息系学生视图中插入记录 
+	> DELETE FROM IS_S WHERE S#='S001'
+	>
+	> 视图消解 :
+	>
+	> DELETE FROM S WHERE S#='S001' AND SD='IS'  
+
+#### 某些带聚合/集函数的视图是不可修改的
+> 例如: UPDATE S_G SET AVG_GR=80 WHERE S#='S001'(错误)
+
+#### 不允许更新的视图规则 
+1. 由两个以上基本表导出的视图
+2. 视图的字段来自常数或表达式，只运行DELETE
+3. 视图的字段来自集函数
+4. 视图中含有GROUP BY子句
+5. 视图中含有DISTINCT语句
+6. 视图定义有嵌套查询，且内层查询涉及到导出本视图的基本表
+7. 不允许更新的视图上定义的视图 
+### 3.5.4 视图的用途
+1. 视图能简化用户的操作
+2. 视图可以使用户多角度看待同一数据
+3. 视图对重构数据库提供了一定的逻辑独立性
+	> 例如：S(S#, SN, SS, SA, SD)需要拆分为 
+	> > SX(S#，SN, SS, SA),  SY(S#, SD)
+	> > 
+	> > 则可以通过视图来保证应用不需改变
+	> > 
+	> > CREATE VIEW S AS SELECT SX.S#, SN, SS, SA, SD FROM SX, SY WHERE SX.S# = SY.S#
+4. 视图能对数据提供安全保护 
+
+## 3.6 数据控制语言(DCL)
+### 3.6.1 授权 
+- [x] 语法 
+> GRANT {ALL PRIVILEGES|<权限>[,<权限>... ...]} [ON <对象类型> <对象名>] TO {PUBLIC|<用户>[,<用户>]... ...} [WITH GRANT OPTION]; 
+- [x] 示例：
+	- GRANT SELECT ON TABLE S TO USER1;
+	- GRANT ALL Privileges ON TABLE S, C TO U2,U3;
+	- GRANT SELECT ON TABLE SC TO PUBLIC;
+	- GRANT UPDATE(SD),SELECT ON TABLE S TO U4;
+	- GRANT INSERT ON TABLE SC TO U5 WITH GRANT OPTION;
+	- GRANT CREATETAB ON DATABASE S_C TO U8;
+ ### 3.6.2 收回权限
+- [x] 语法 
+> REVOKE {ALL PRIVILEGES|<权限>[,<权限>... ...]} [ON <对象类型> <对象名>] FROM {PUBLIC|<用户>[,<用户>]... ...};
+- [x] 示例
+	- REVOKE SELECT ON TABLE SC FROM PUBLIC;
+	- REVOKE UPDATE(SD),SELECT ON TABLE S FROM U4;
+	- REVOKE INSERT ON TABLE SC FROM U5;
