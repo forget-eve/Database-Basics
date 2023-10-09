@@ -1755,6 +1755,7 @@ $$WHERE \ F$$
 	- GRANT UPDATE(SD),SELECT ON TABLE S TO U4;
 	- GRANT INSERT ON TABLE SC TO U5 WITH GRANT OPTION;
 	- GRANT CREATETAB ON DATABASE S_C TO U8;
+
  ### 3.6.2 收回权限
 - [x] 语法 
 > REVOKE {ALL PRIVILEGES|<权限>[,<权限>... ...]} [ON <对象类型> <对象名>] FROM {PUBLIC|<用户>[,<用户>]... ...};
@@ -1762,3 +1763,234 @@ $$WHERE \ F$$
 	- REVOKE SELECT ON TABLE SC FROM PUBLIC;
 	- REVOKE UPDATE(SD),SELECT ON TABLE S FROM U4;
 	- REVOKE INSERT ON TABLE SC FROM U5;
+
+## 3.7 嵌入式SQL语言
+- [x] SQL语言是非过程的，而应用大多是过程化的，故通过高级语言来弥补SQL过程控制的不足.
+- [x] 将SQL嵌入(Embedded SQL)高级语言（宿主语言）来执行，称嵌入式SQL语言(简称ESQL)。
+
+### 3.7.1 嵌入式SQL的一般形式 
+- [x] 对于ESQL的处理，DBMS一般有两种处理方式： 
+	- 1. 预编译
+	- 2. 修改和扩充宿主语言以处理SQL
+- [x] ESQL一般形式：EXEC SQL <SQL 语句> 
+- [x] ESQL根据其作用不同分为两类 :
+	- 1. 可执行语句
+	- 2. 说明性语句 
+	> 可执行语句包括DDL、DML、DCL。两类SQL语句应和宿主语言两类语句出现在同一地方
+
+### 3.7.2 嵌入式SQL语句与主语言之间的通信
+- [x] 数据库工作单元和主语言工作单元之间的通信有
+	- 1. 向主语言传递SQL语句的执行状态
+	- 2. 主语言向SQL语句提供参数 
+	- 3. 将SQL语句查询数据库结果交主语言进一步处理 
+- [x] 相应地通过SQLCA、主变量、游标来实现
+
+#### SQL通信区  
+- [x] SQLCA（SQL Communication Area）是一个数据结构，定义语句 
+	> EXEC SQL INCLUDE SQLCA ;
+- [x] SQLCODE反映每次执行SQL语句的结果 
+
+#### 主变量 
+- [x] 主要功能：ESQL可以使用主语言的变量来输入和输出数据 
+- [x] 分类：输入、输出主变量、指示变量
+- [x] 使用方法 
+	- 1. 所有主变量在定义区定义（BEGIN DECLARE SECTION、END DECLARE SECTION）oracle中可以在之外定义。
+	- 2. 可以在SQL中任意表达式的对方出现。
+	- 3. 在SQL语句中，主变量前要加‘：’,而在主语言中不必加。
+	- 4. 指示变量用于为输入变量赋空值或指示输出变量是否空值。
+
+#### 游标 
+- [x] 使用原因：SQL语句是面向集合的，而主语言是面向记录的
+- [x] 主语言和SQL语言的分工 
+	- 1. SQL语言负责直接与数据库打交道
+	- 2. 主语言用来控制程序流程以及对SQL的执行结构进一步处理
+	- 3. SQL语言用主变量从主语言接受执行参数操作数据库→SQL语言的执行状态由DBMS送至SQLCA→主语言从SQLCA取出状态信息，据此决定下一步操作。
+	- 4. SQL的执行结果通过主变量或游标传给主语言处理
+
+### 3.7.3 不使用游标的SQL语句 
+#### 不使用游标的SQL语句的种类
+1. 说明性语句
+2. 数据定义语句
+3. 数据控制语句
+4. 查询结果为单记录的SELECT语句
+5. 非CURRENT形式的UPDATE语句
+6. 非CURRENT形式的DELETE语句
+7. INSERT语句
+
+#### 1. 说明性语句 
+> EXEC SQL INCLUDE SQLCA；
+>
+> EXEC SQL BEGIN DECALRE SECTION；
+>
+> EXEC SQL END DECALRE SECTION
+
+#### 2. 数据定义语句 
+> EXEC SQL CREATE TABLE S(S# char(10), SN char(10), SS char(2),SA int, SD char(5));
+>
+> EXEC SQL DROP TABLE； 
+- [x] **_数据定义语句中不允许使用主变量_** 
+	> EXEC SQL DROP TABLE :tablename; （错误）
+
+#### 3. 数据控制语句 
+- [x] 授权：EXEC SQL GRANT SELECT ON TABLE S TO U1 
+- [x] 出错处理：EXEC SQL WHENEVER SQLERROR do sql_error()
+- [x] 连接数据库：
+	> EXEC SQL CONNECT :user IDENTIFIED BY :pass USING :tnsname;
+
+#### 4. 查询结果为单条记录SELECT语句 
+- [x] 语法 
+	> EXEC SQL SELECT [ALL|DISTINCT] {*|<目标表达式1> [,<目标表达式2> ... ...]} INTO <主变量1> [<指示变量1>] [,<主变量1> [<指示变量1>]......] FROM <表名或视图名1> [，<表名或视图名2>]...[WHERE <条件表达式>] [GROUP BY <列名表达式1>[，<列名表达式2>]] [HAVING <条件表达式> ] [ORDER BY <列名表达式1> [ASC|DESC][,<列名表达式2> [ASC|DESC]]
+- [x] 示例：
+	> EXEC SQL SELECT S#, SN INTO :sno, :sn FROM S WHERE S# =:GivenSno
+- [x] **_注意_**：
+	- 1. **into、where和having子句中均可以使用主变量，需要事先申明。**
+	- 2. **返回值某列为NULL时，系统会将指示变量赋值为-1，主变量不变。**
+	- 3. **如查询结果没有满足条件的记录，则DBMS置sqlcode值为100，正常有结果为0。** 
+	- 4. **如结果不止单条，程序出错，SQLCA中包含返回信息。**
+
+#### 5. 非CURRENT形式的UPDATE语句 
+- [x] 将课程C01全部提分
+	> EXEC SQL UPDATE SC SET GR=GR+:Raise WHERE C# =' C01'
+- [x] 重新设置某个学生成绩
+	> EXEC SQL UPDATE SC SET GR=:newgr WHERE S# = 'S001'
+- [x] 将计算机系所有同学成绩置空 
+	> Grid=-1
+	>
+	> EXEC SQL UPDATE SC SET GR=:newgr :grid WHERE S# IN (SELECT S# FROM S WHERE SD='CS')
+	>
+	> 等价：
+	> EXEC SQL UPDATE SC SET GR=NULL WHERE S# IN (SELECT S# FROM S WHERE SD='CS')
+#### 6. 非CURRENT形式的DELETE语句
+- [x] 例:删除某学生的选课情况 
+	> EXEC SQL  DELETE FROM SC WHERE S# IN (SELECT S# FROM S WHERE SN=:sname)  
+	>
+	> 或者:
+	>
+	> EXEC SQL  DELETE FROM SC WHERE :sname= (SELECT SN FROM S WHERE S.S# = SC.S#)
+#### 7. INSERT语句 
+- [x] 例：某个学生选修了一门课程 
+	> grid=-1;
+	>
+	> EXEC SQL INSERT INTO SC VALUES (:sno, :cno, :gr  :grid);
+	>
+	> 或者：
+	> EXEC SQL INSERT INTO SC (S#, C#) VALUES (:sno, :cno);
+
+### 3.7.4 使用游标的SQL语句 
+#### 使用游标的语句 
+1. 查询结果为多条记录的SELECT语句
+2. CURRENT形式的UPDATE语句
+3. CURRENT形式的DELETE语句
+
+#### 1. 查询结果为多条记录的SELECT语句 
+> 游标在SELECT语句的集合和主语言的一次只能处理一条记录之间架起桥梁 
+##### 游标步骤
+- [x] 1. 说明游标：仅仅是定义，并不执行查询 
+	> EXEC SQL DECLARE <游标名> CURSOR FOR <SELECT 语句> 
+- [x] 2. 打开游标：执行相应的查询，把结果放进缓冲区，并把指针指向第一条记录 
+	> EXEC SQL OPEN  <游标名> 
+- [x] 3. 读取当前记录并推进游标指针
+	> EXEC SQL FETCH <游标名> 
+	>
+	> INTO <主变量>[<指示变量>][,<主变量>[<指示变量>]......] 
+- [x] 4. 关闭游标：释放缓冲区等资源 
+	> EXEC SQL CLOSE <游标名>； 
+##### 例：查询某个指定系的所有学生情况
+```C
+EXEC SQL INCLEDE SQLCA；  //说明性语句
+EXEC SQL BEGIN DECLARE SECTION； 
+	VARCHAR 	depname[5]； /*oracle中当作struct处理*/
+	VARCHAR 	HSno[10]；     /*用char 更简单*/
+	VARCHAR 	HSname[10]；
+	VARCHAR 	HSex[2]；
+	int		HSage；
+EXEC SQL END DECLARE SECTION；
+... ...
+gets(depname)；
+... ...
+EXEC SQL DECLARE SX CURSOR FOR    	//说明游标
+		SELECT S# , SN ,SS , SA FROM S 
+		WHERE SD = :depname；
+EXEC SQL OPEN SX；                   		//打开游标
+while (1){
+	EXEC SQL FETCH SX INTO :Hsno,:Hsname,:Hsex,:HSage；
+				//读取当前记录并推进游标指针
+	if（sqlca.sqlcode!=SUCCESS）break；            
+	printf(“%s,%s,%s,%d\n”, Hsno, Hsname, Hsex, HSage);
+	... ... 
+}
+EXEC SQL CLOSE SX；   //关闭游标
+```
+> **_注：depname值改变后可以重新打开游标，获得不同的集合。_** 
+
+#### 2. CURRENT形式的UPDATE和DELETE语句 
+##### 操作步骤 
+- [x] 1. 说明游标 
+	> EXEC SQL DECLARE <游标名> CURSOR FOR <SELECT查询> FOR UPDATE [OF <列名>]； 
+- [x] 2. OPEN游标 
+- [x] 3. FETCH游标 
+- [x] 4. 检查是否要修改或删除，若是执行DELETE或UPDATE，并且使用WHERE CURRENT OF <游标名>
+- [x] 5. 处理完毕CLOSE游标  
+
+##### 例：检索某系的学生，根据要求处理数据 
+```C
+... ...
+EXEC SQL INCLEDE SQLCA；
+EXEC SQL BEGIN DECLARE SECTION；
+	VARCHAR 	depname[5]；
+	VARCHAR 	HSno[10]；
+	VARCHAR 	HSname[10]；
+	VARCHAR 	HSex[2]；
+	int 		HSage；
+EXEC SQL END DECLARE SECTION；
+.... ...
+gets(depname)；
+... ...
+EXEC SQL DECLARE SX CURSOR FOR
+	SELECT S# , SN ,SS , SA FROM S
+	WHERE SD =:depname 
+	[FOR UPDATE OF SA]；
+EXEC SQL OPEN SX；
+while (1){
+	EXEC SQL FETCH SX INTO :Hsno, :Hsname,
+	:Hsex, :Hsage;
+	if（sqlca.sqlcode!=SUCCESS）break；
+ printf(“%s,%s,%s,%d\n”, Hsno, Hsname, Hsex, HSage);
+	printf(“UPDATE(U) or DELETE(D) or NO(N)?\n”);
+	scanf(“%c”,&op);
+	if(op==’U’){
+		printf(“Input new age:”);
+		scanf(“%d”,&newage);
+		EXEC SQL UPDATE S SET SA=:newage WHERE 	CURRENT OF SX;
+	}
+	else if(OP==’D’)
+	EXEC SQL DELETE FROM S WHERE CURRENT OF SX;
+	else continue;
+	... ... 
+}
+EXEC SQL CLOSE SX；
+```
+
+### 3.7.5 动态SQL语句(以SYBASE的ESQL为例)
+- 在预编译时无法获得如下信息的必须使用动态SQL技术，未知信息可能包括：
+	- 1. SQL语句正文
+	- 2. 主变量个数
+	- 3. 主变量数据类型
+	- 4. SQL语句引用的数据对象
+#### 动态语句的四种实现方式(仅介绍方法一)
+- [x] 特点：执行语句不能返回任何结果
+- [x] 语法 
+	> EXEC SQL  EXECUTE IMMEDIATE {: host_variable | string}
+- [x] 示例：
+
+```C
+EXEC SQL BEGIN DECLARE SECTION;
+CS_CHAR sqlstring[200];
+EXEC SQL END DECLARE SECTION;
+char cond[150];
+strcpy(sqlstring,"update titles set price=price*1.10 where");
+printf("Enter search condition:");
+scanf("%s", cond);
+strcat(sqlstring, cond);
+EXEC SQL EXECUTE IMMEDIATE :sqlstring;
+```
