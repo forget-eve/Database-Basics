@@ -1273,3 +1273,370 @@ I --> H
   > DML：select insert delete update
   >
   > DCL：grant revoke commit rollback 
+
+## 3.2 数据定义语言(DDL)
+### 3.2.1 定义、删除与修改基本表 
+#### 定义基本表语法 
+> CREATE &nbsp; TABLE <表名> (<列名><数据类型>[列级约束条件][,<列名><数据类型>[列级约束条件]... ...][,<表级完整性约束条件>])
+
+```举例
+CREATE TABLE S（
+	S＃	CHAR(5) ，
+	SN	CHAR(20) NOT NULL UNIQUE ，
+	SA  INT，
+	SD CHAR(3),
+	PRIMARY KEY  (S#)
+）；
+```
+
+#### 修改表语法 
+> ALTER TABLE <表名> 
+>
+> [ADD <新列名><数据类型>[列级约束条件]]
+>
+> [DROP <完整性约束条件>]
+>
+> [MODIFY <列名><数据类型>];
+
+```举例
+ALTER TABLE S ADD SCome DATE；
+ALTER TABLE S MODIFY SA SMALLINT；
+ALTER TABLE S DROP UNIQUE(S#)；
+```
+
+#### 删除表语法 
+> DROP TABLE <表名> 
+
+```举例
+DROP TABLE S
+```
+
+### 3.2.2 建立和删除索引
+#### 索引的建立语法
+> CREATE [UNIQUE][CLUSTER] INDEX <索引名>
+>
+> ON <表名>（<列名1>[<次序>][，<列名2><次序>... ...]）
+>
+> <次序>可以是ASC和DESC
+
+```举例
+CREATE UNIQUE INDEX S_S# ON S(S#)
+CREATE UNIQUE INDEX C_C# ON C(C#)
+CREATE UNIQUE INDEX SC_S#_C# ON SC(S# ASC,C# DESC)
+```
+
+#### 索引的删除语法
+> DROP INDEX [<表名>.]<索引名>
+
+```举例
+DROP INDEX [S.]S_S#
+```
+## 3.3 SQL的数据查询(DML)
+- 关系代数表达式 
+
+$$\Pi _{A_1,A_2,...,A_n}(\sigma _F(R_1×R_2×...×R_n))$$ 
+
+- SQL语句
+
+$$SELECT \ A_1，A_2,...,A_n$$
+
+$$FROM \ R_1，R_2,...,R_m$$
+
+$$WHERE \ F$$
+
+- 详细语法 
+> SELECT [ALL|DISTINCT] {*|<目标表达式1> [,<目标表达式2> ... ...]}
+>
+> FROM <表名或视图名1> [，<表名或视图名2>]... ...
+>
+> [WHERE <条件表达式>]
+>
+> [GROUP BY <列名表达式1>[，<列名表达式2>]] [HAVING <条件表达式> ]
+>
+> [ORDER BY <列名表达式1> [ASC|DESC]], <列名表达式2> [ASC|DESC]]
+
+- 执行过程 
+1. 先按WHERE子句条件从FROM子句指定的表/视图中找出满足条件的元组(选择);
+2. 如有GROUP子句，则将结果按<列名表达式>的值分组，该<列名表达式>值相等的元组为一个组，通	常会在每组中使用聚合函数。
+3. 如果GROUP子句带HAVING子句，则对组过虑，将满足条件的组输出
+4. 再按SELECT子句中的目标表达式选择出元组中的属性，形成结果表(投影)；
+5. 如果ORDER子句，则将结果按<列名表达式1>的值升序或降序排列
+
+### 3.3.1 单表查询
+> 假设(表格见下)
+> > S(S#，SN，SS，SA，SD)
+> >
+> > C(C#，CN，CP，CR)
+> >
+> > SC(S#，C#，GR)
+
+<P align="center">
+  <img src="./img/示例图表1.png" alt="假设对应的图表">
+  <p align="center">
+    <span>假设对应的图表</span>
+  </p>
+</P>
+
+- [x] 选取表中的某些列，即投影运算
+	> 查指定列(见下图)
+	> > SELECT S#,SN FROM S 
+	>
+	> 查全部列 
+	> > SELECT * FROM STUDENT 
+	>
+	> 查经过计算的列(见下图) 
+	> > SELECT SN，2015-SA FROM S 
+
+<P align="center">
+  <img src="./img/示例图表2.png" alt="投影运算和选择运算对应的图表">
+  <p align="center">
+    <span>投影运算和选择运算对应的图表</span>
+  </p>
+</P>
+
+- [x] 选择表中的若干元组，即选择运算
+	> 消除取值重复行(见上图)
+	> > SELECT DISTINCT SD FROM S
+	>  
+	> 查询满足条件的元组  
+	> > 比较大小：<、<= 、>、>=、=、<> 
+	> > > SELECT SN,SA FROM S WHERE SD=’CS’
+	> > >
+	> > > SELECT * FROM S WHERE SA<20
+	>
+	> > 确定范围：BETWEEN... AND 
+	> > > SELECT * FROM S WHERE SA BETWEEN 20 AND 21
+	> 
+	> > 确定集合：IN 
+	> > > SELECT * FROM S WHERE SD IN (‘CS’,’IS’,’MA’) 
+	> 
+	> > 字符匹配：LIKE，转义字符’\’
+	> > > SELECT * FROM S WHERE S# LIKE ‘TB%’
+	> > >
+	> > > SELECT * FROM S WHERE SN LIKE ‘刘_’
+	> 
+	> > 涉及空值的查询：IS NULL 
+	> > > SELECT * FROM SC WHERE GR IS NULL 
+	> 
+	> > 多重条件查询：
+	> > > SELECT * FROM S WHERE SD=’CS’ AND SA<20 
+
+- [x] 查询结果排序
+	> ORDER BY <字段表达式> ASC|DESC
+	>
+	> SELECT * FROM SC WHERE C#=’3’ ORDER BY GR DESC(见下图)
+
+- [x] 使用集(聚合)函数 
+	> COUNT 、SUM、AVG、MAX、MIN
+	>
+	> SELECT COUNT(*) FROM S
+	>
+	> SELECT COUNT(DISTINCT S#) FROM SC
+	>
+	> SELECT AVG(GR) FROM SC WHERE S#='95001'
+	>
+	> SELECT MAX(GR) FROM SC WHERE C#='1'
+
+- [x] 查询分组：GROUP BY 
+	> SELECT C#,COUNT(\*) FROM SC GROUP BY C#(见下图)
+	>
+	> SELECT S# FROM SC GROUP BY S# HAVING COUNT(*) >3(见下图)  &nbsp; &nbsp; &nbsp;    检索选修>3门的课学生学号 
+
+<P align="center">
+  <img src="./img/示例图表3.png" alt="查询对应的部分图表">
+  <p align="center">
+    <span>查询对应的部分图表</span>
+  </p>
+</P>
+
+### 3.3.2 连接查询
+- [x] 等值连接  
+	> SELECT  * FROM S,SC WHERE S.S# = SC.S#(见下表)
+	> > (SQL92 ，SQL99,自然连接通过select列体现)
+	> 
+	> SELECT * FROM S [inner] join SC 
+	> > on  S.S# = SC.S#   (SQL92 ,SQL99)
+- [x] 自然连接 (消除重复列sid)
+	> SELECT * FROM S natural  join SC    (SQL99)
+	>
+	> SELECT * FROM S join SC using (s#)   (SQL99)
+
+> **_注：99标准更灵活_**
+> > SELECT ...  FROM table1
+> >
+> > JOIN table2 ON table1 和 table2 的连接条件
+> >
+> > JOIN table3 ON table2 和 table3 的连接
+
+- [x] 自连接
+	> 检索每门课的间接预修课 
+	> > SELECT f.C#, s.CP FROM C f,C s WHERE f.CP=s.C(见下表)
+ 
+ <P align="center">
+  <img src="./img/示例图表4.png" alt="连接查询对应的部分图表">
+  <p align="center">
+    <span>连接查询对应的部分图表</span>
+  </p>
+</P>
+
+<P align="center">
+  <img src="./img/示例图表4-1.png" alt="SELECT f.C#, s.CP FROM C f,C s WHERE f.CP=s.C的推导过程">
+  <p align="center">
+    <span>SELECT f.C#, s.CP FROM C f,C s WHERE f.CP=s.C的推导过程</span>
+  </p>
+</P>
+
+- [x] 外连接 
+> 列出所有学生的修课情况，如果没有选课也列出其基本信息(左外连接)
+> > SELECT S#,SN,SS,SA,SD,C#,GR FROM S, SC WHERE S.S# *=SC.S#   (SYBASE MSSQL)
+ 
+> > SELECT S#,SN,SS,SA,SD,C#,GR FROM S, SC WHERE S.S# =SC.S#(+)   (ORACLE|SQL92标准)
+
+> > SELECT S#,SN,SS,SA,SD,C#,GR FROM S LEFT OUTER JION SC ON S.S#=SC.S#(见下表)
+> >
+> > (MYSQL MSSQL|SQL99标准)
+
+<P align="center">
+  <img src="./img/示例图表5.png" alt="SELECT S#,SN,SS,SA,SD,C#,GR FROM S LEFT OUTER JION SC ON S.S#=SC.S#的推导过程">
+  <p align="center">
+    <p>SELECT S#,SN,SS,SA,SD,C#,GR</p>
+	<p>FROM S LEFT OUTER JION SC ON S.S#=SC.S#的推导过程</p>
+  </p>
+</P>
+
+- [x] 复合条件连接(表格见下图)
+	> 检索选修课程号‘2’且成绩在90分以上的所有学生
+	> > SELECT S.S# ,SN FROM S,SC WHERE S.S# = SC.S# AND SC.C#=’2’ AND SC.GR>=90
+	> 
+	> 检索每个学生选修的课程名及其成绩
+	> > SELECT S.S#,SN,C.CN,SC.GR from S,SC,C WHERE S.S# = SC.S# AND SC.C# = C.C#
+
+<P align="center">
+  <img src="./img/示例图表6.png" alt="复合条件连接对应的图表">
+  <p align="center">
+    <span>复合条件连接对应的图表</span>
+  </p>
+</P>
+
+### 3.3.3嵌套查询 
+- [x] 带IN谓词的子查询 
+> 检索与“刘晨”同在一系的学生信息
+> > SELECT S#,SN,SD FROM S WHERE SD IN (SELECT SD FROM S WHERE SN＝'刘晨')
+> 
+> 本例可以通过自连接来实现 
+> > SELECT s1.S#, s1.SN, s1.SD FROM S s1, S s2 WHERE s1.SD = s2.SD AND s2.SN='刘晨'
+
+> 检索选修了课程名的为‘MA’的学生学号和姓名 
+> > SELECT S#, SN FROM S WHERE S# IN (SELECT S# FROM SC WHERE C# IN (SELECT C# FROM C WHERE CN='MA'))
+>
+> 本例同样可以用连接来实现 
+> > SELECT S#,SN FROM S,SC,C WHERE S.S# = SC.S# AND SC.C# = C.C# AND C.CN='MA'
+
+- [x] 带比较运算的子查询 
+	> 当确定子查询的返回值是唯一时，可以使用比较运算符(注意子查询在比较符后)
+	> > SELECT S#,SN FROM S WHERE SD=(SELECT SD FROM S WHERE CN='刘晨')
+
+- [x] 带ANY和ALL的子查询(子查询返回多值时用)
+	> 检索其他系中比IS系任一学生年龄小的学生名单 
+	> > SELECT S＃,SN FROM S WHERE SA < ANY (SELECT SA FROM S WHERE SD＝'IS') AND SD<>‘IS’ ORDER BY SA DESC
+	> 
+	> > 等价于
+	> >
+	> > SELECT S#，SN FROM S WHERE SA < (SELECT MAX（SA） FROM S WHERE SD＝'IS') AND SD <> 'IS' ORDER BY SA DESC 
+	> 
+	> 检索其他系中比IS系所有学生年龄都小的学生名单
+	> > SELECT S＃，SN FROM S WHERE SA < ALL (SELECT SA FROM S WHERE SD＝‘IS’) AND SD<>'IS'  
+	> 
+	> > 等价于
+	> >
+	> > SELECT S＃，SN FROM S WHERE SA < (SELECT MIN（SA） FROM S WHERE SD＝'IS') AND SD <> 'IS' ORDER BY SA DESC
+
+- [x] 带EXISTS的子查询(不返回任何数据，只返回Ture和False) 
+> 检索所有选修了课程号为'1'的学生姓名 
+> > SELECT SN FROM S WHERE EXISTS (SELECT * FROM SC WHERE S# = S.S# AND C# = '1')
+> > > _**注意：此例中子查询的查询条件依赖于外层父查询，称此类查询为相关子查询(corelated subquery)。**_
+> 
+> 等价连接实现：
+> > SELECT SN FROM S,SC WHERE S.S# = SC.S# AND C# = '1'
+
+- [ ] SQL中没有(∀x)p，故须转换为¬(∃x(¬p)) 
+	> 如检索选修了全部课程的学生,即没有一门课没有选的学生
+	> > SELECT SN FROM S WHERE NOT EXISTS (SELECT * FROM C WHERE NOT EXISTS (SELECT * FROM SC WHERE C#＝ C.C# AND S# = S.S#))
+- [ ] p→q应被等价为¬p∨q
+	> 如检索至少选修了学生S001选修的全部课程的学生
+	>
+	> 令p='学生S001选修了y' &nbsp; q＝'学生x选修了y'
+	
+	$$(∀y)(p→q)=¬∃y(¬(p→q))= ¬∃y(¬(¬p∨q))= ¬∃y(p∧¬q))$$
+	
+	> 即不存在这么一门课程，学生S001选修了而x没有选修
+	> > SELECT SN FROM S WHERE NOT EXISTS(SELECT * FROM SC SC2 WHERE S# = 'S001' AND NOT EXISTS (SELECT * FROM SC WHERE C# = SC2.C# AND S# = S.S#))  
+
+### 3.3.4集合查询
+- [x] 使用交、并、差的集合运算概念,INTERSECT,UNION,MINUS  
+	- [ ] 检索计算机科学系及年龄不大于19岁的学生 
+		> SELECT * FROM S WHER SD=’CS’ UNION SELECT * FROM S WHERE SA<＝19
+		> 
+		> 等价于：
+		> > SELECT * FROM S WHERE SD＝‘CS’ OR SA <=19
+	- [ ] 检索选修了课程号为C01或C02的学生学号
+		> SELECT S# FROM SC WHERE C#＝'C01' UNION SELECT S# FROM SC WHERE C＃＝‘C02’
+		>
+		> 等价于：
+		> > SELECT S# FROM SC WHERE C# IN ('C01','C02')
+	- [ ] 检索同时选修了课程号为C01和C02的学生学号 
+		> SELECT S# FROM SC WHERE C#＝'C01' INTERSECT SELECT S# FROM SC WHERE C#＝'C02'(仅ORACLE)
+		>
+		>  等价于：
+		> > SELECT S# FROM SC WHERE C# = ‘C01’ AND S# IN (SELECT S# FROM SC WHERE C# = 'C02')
+	- [ ] 检索选修了课程号为C01而未选修C02的学生学号。
+> SELECT S# FROM SC WHERE C#＝'C01' MINUS SELECT S# FROM SC WHERE C#＝'C02'(仅ORACLE)
+>
+> 等价于：
+> > SELECT S# FROM SC WHERE C#＝'C01' AND S# NOT IN (SELECT S# FROM SC WHERE C#＝'C02')
+
+## 3.4 SQL的数据更新(DML)
+### 3.4.1 数据插入 
+#### 插入单个元组 
+- [x] 语法：
+	> INSERT INTO <表名>[ (<列名1> [, <列名2>]......)]
+	>
+	> VALUES(<常量1>[,<常量2>]......)
+	> > 例：INSERT INTO S VALUES('S001','张三’,'男',18,'IS')
+#### 插入子查询结果 
+- [x] 语法:
+	> INSERT INTO <表名> [ (<列名1> [, <列名2>]......)]<子查询>
+	> > 例：为所有学生插入一条选修C01课程的记录
+	> > > INSERT INTO SC SELECT  S#,'C01',null FROM S  
+### 3.4.2 数据修改 
+- [x] 语法:
+	> UPDATE <表名> SET <列名>＝<表达式>[, <列名>＝<表达式>]...... [WHERE <条件>]; 
+- [x] 修改某一个元组的值 
+	> 将学生S001的年龄该为22岁
+	> > UPDATE S SET SA=22 WHERE S# =’S001’ 
+- [x] 修改多个元组的值 
+	> 将所有的学生年龄增加1岁 
+	> > UPDATE S SET SA＝SA＋1
+- [x] 带子查询的修改语句 
+	> 将计算机科学系所有的学生成绩置零 
+	> > UPDATE SC SET GR=0 WHERE 'CS' = (SELECT SD FROM S WHERE S# = SC.S#) (相关子查询) 
+	>
+	> 不同的DBMS可以使用join实现同样功能，如SYBASE UPDATE SC set GR=0 from S where S.S#=SC.S# and SD='CS' 或 UPDATE SC set GR=0 where S# in (SELECT S# from S where SD='CS') 
+- [x] 修改操作与数据库的一致性 
+	> 如同时修改S和SC两表中的S#的值
+	> 
+	> 为了保证数据库的一致性，引入事务概念 
+### 3.4.3 数据删除 
+- [x] 语法： 
+	> DELETE FROM <表名> [WHERE <条件>];
+- [x] 删除某一个元组的值 
+	> 删除学号为S001的学生 
+	> > DELETE FROM S WHERE S#='S001' 
+- [x] 删除多个元组的值 
+	> 删除所有学生的选课记录 
+	> > DELETE FROM SC 
+- [x] 带子查询的删除语句 
+	> 删除计算机科学系所有学生的选课记录 
+	> > DELETE FROM SC WHERE ‘CS’=(SELECT SD FROM S WHERE S#=SC.S#) (相关子查询) 
+	> >
+	> > DELETE from SC where S# in (SELECT S# from S where SD=’CS’) (非相关子查询) 
