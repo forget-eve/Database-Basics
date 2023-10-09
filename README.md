@@ -1994,3 +1994,188 @@ scanf("%s", cond);
 strcat(sqlstring, cond);
 EXEC SQL EXECUTE IMMEDIATE :sqlstring;
 ```
+
+## 3.8 存储过程* (T-SQL)
+### 语法
+	> create procedure [owner.]procedure_name [(@parameter_name datatype [= default][output] [, @parameter_name datatype [= default][output]]...)] [with recompile] as <SQL_statements>
+### 语言要素：
+#### 语句块
+
+```语句块
+begin 
+	<statement block>
+end
+```
+
+#### 变量
+
+```变量
+以@开始的为用户变量，以@@开始的为全局变量
+定义变量：DECLARE
+@@rowcount 操作影响的行数
+@@sqlstatus游标Fetch的状态
+```
+
+#### 条件控制 
+
+```条件控制 
+if logical_expression
+	statements 
+[else 
+	[if logical_expression] 
+	statements]
+```
+
+#### 循环控制
+
+```循环控制 
+while boolean_expression 	
+	statement 
+break 
+	statement
+continue
+```
+
+#### 顺序控制
+
+```顺序控制
+label: 
+goto label
+```
+
+#### 返回值 
+
+```返回值
+return [integer_expression]
+```
+
+#### 打印信息
+
+```打印信息
+print {format_string | @local_variable | @@global_variable} [, arg_list]
+select @local_variable | @@global_variable
+```
+
+#### 执行
+
+```执行
+[execute] [@return_status =] [[[server.]database.]owner.]procedure_name 
+[[@parameter_name =] value | [@parameter_name =] @variable [output]
+[,[@parameter_name =] value|[@parameter_name = ] @variable [output]...]] 
+[with recompile]
+```
+
+#### 示例
+> 给定学号，获得该学生成绩，若是C01课程，成绩加1，否则加2 
+
+```代码
+CREATE PROCEDURE get_gr @sno varchar(10), @GR int OUTPUT 
+AS
+DECLARE @cno varchar(5)
+BEGIN
+   SELECT top 1 @cno=C#,@GR=GR FROM SC WHERE S# = @sno
+   IF (@cno =’C01’)
+      select @GR=@GR+1
+   ELSE
+	 select @GR=@GR+2
+END
+执行：
+	declare @gr int
+	execute get_gr ‘s001’,@gr  output 
+	select @gr 或print @gr
+```
+
+### Oracle PL/SQL—自含式环境(sqlplus 等)
+
+```代码
+set serveroutput on 
+declare
+   v_sid S.sid%type;    v_sname S.sn%type;
+   v_sa	S.sa%type;  v_sa S.sd%type;   v_prom varchar(10);
+   cursor c1 is select sid,sname,sa from S where sd=&v_sd;
+begin
+   open c1; 
+   loop
+       fetch c1 into v_sid,v_sname,v_sa;
+       exit when c1%notfound 
+      case 
+          when v_sa <18  then v_prom:=‘未成年’；
+          else v_prom:=‘成年’；
+      end case;
+      dbms_output.put_line(v_sname||”:”||v_prom);
+  end loop; close c1;
+end;
+```
+ 
+### Oracle PL/SQL--procedure
+
+```代码
+CREATE OR REPLACE PROCEDURE myproc(
+    parm1 IN number:=0,parm2 OUT number)  as
+   r1  TAB1%rowtype；
+   type t_rec2 is record(c1 TAB2.c1%type, c2 char(2));
+   r2 t_rec2;   
+begin
+   for r1 in (select * from TAB1) loop
+       dbms_output.put_line(r1.field1);
+       r2.c1=r2.c1+r1.filed1;
+   end loop;
+   select  max(field2) into r2.c2 from TAB1
+end;
+```
+
+### Opengauss/Postgres(PLpgsql)
+
+```代码
+create or replace procedure 存储过程名 (param_list)
+language plpgsql
+as $$    
+	declare 变量名 type [default value];    
+	begin        
+		sql_statement;        
+		commit;    
+end;
+$$;    -- 分号可要可不要
+/    -- 多个存储过程之间分割
+调用存储过程：
+Call 存储过程名 (param);
+```
+
+#### 示例:转账交易(1→2 转1000元）
+
+```代码
+create or replace procedure transfer(id1 int,id2 int,num  numeric)
+language plpgsql
+as $$    
+      begin                
+	update accounts set account=account-num where id=id1;       	update accounts set account=account+num where id=id2;                	commit;  --提交事务    
+      end;
+$$;
+调用：
+    call transfer(1,2,1000);
+```
+
+##### 自定义函数
+
+```自定义函数
+CREATE OR REPLACE FUNCTION  functionname(param type, …)
+ RETURNS datatype
+ LANGUAGE plpgsql
+AS $$
+DECLARE
+   variable datatype;
+BEGIN
+   SQL statement;
+   return variable; 
+END;
+$$;
+```
+
+### Oracle MSSQL Mysql若干区别
+
+<P align="center">
+  <img src="./img/Oracle-MSSQL-Mysql若干区别.png" alt="Oracle MSSQL Mysql若干区别">
+  <p align="center">
+    <span>Oracle MSSQL Mysql若干区别</span>
+  </p>
+</P>
