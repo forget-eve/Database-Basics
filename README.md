@@ -1245,7 +1245,7 @@ I --> H
 	- [x] 关系完备系统：支持关系结构和所有关系代数操作
 	- [x] 全关系系统：支持关系模型的所有特征。 
 
- # 第三章 关系数据库标准查询语言SQL 
+# 第三章 关系数据库标准查询语言SQL 
 ##  3.1 SQL概述
 - SQL(Standard/Structured Query Language)是关系数据库标准 - 1986年10月，美国国家标准局（American National Standard Institute ANSI）公布第一个标准ANSI X3.135-1986，国际标准化组织（International Organization for Standardization ISO）也通过这一标准称SQL－86 
 - 1989年ANSI再次公布标准ANSI X3.135-1989 ，ISO 相应SQL－89 
@@ -1275,7 +1275,9 @@ I --> H
   > DCL：grant revoke commit rollback 
 
 ## 3.2 数据定义语言(DDL)
+
 ### 3.2.1 定义、删除与修改基本表 
+
 #### 定义基本表语法 
 > CREATE &nbsp; TABLE <表名> (<列名><数据类型>[列级约束条件][,<列名><数据类型>[列级约束条件]... ...][,<表级完整性约束条件>])
 
@@ -1331,6 +1333,7 @@ CREATE UNIQUE INDEX SC_S#_C# ON SC(S# ASC,C# DESC)
 ```举例
 DROP INDEX [S.]S_S#
 ```
+
 ## 3.3 SQL的数据查询(DML)
 - 关系代数表达式 
 
@@ -1645,6 +1648,7 @@ $$WHERE \ F$$
 > 视图只是一个窗口，其数据依赖于基本表
 
 ### 3.5.1 定义视图 
+
 #### 建立视图 
 - [x] 语法 ：
 	> CREATE VIEW <视图名> [(<列名1>[，<列名2>......])] AS <子查询>  [WITH CHECK OPTION] 
@@ -1681,6 +1685,7 @@ $$WHERE \ F$$
 	> DROP VIEW <视图名>
 	> > 例子：删除视图IS_S
 	> > > DROP VIEW IS_S  
+
 ### 3.5.2 查询视图 
 - [X] 把对视图的查询转化为对基本表的查询称为视图的消解(View Resolution) 
 	> SELECT S#，SA FROM IS_S WHERE SA < 20 
@@ -1696,7 +1701,9 @@ $$WHERE \ F$$
 	> SELECT S#, AVG(GR) FROM SC WHERE AVG(GR)>90 GROUP BY S# &nbsp; &nbsp; &nbsp; (错误)
 	>
 	> SELECT S#, AVG(GR) FROM SC GROUP BY S# HAVING AVG(GR)>90 &nbsp; &nbsp; &nbsp; (正确)
+
 ### 3.5.3 更新视图 
+
 #### 视图的修改 
 - [x] 将信息系学生视图中学号为S001的学生姓名改为'刘辰'
 	> UPDATE IS_S SET SN='刘辰' WHERE S#='S001' 
@@ -1732,6 +1739,7 @@ $$WHERE \ F$$
 5. 视图中含有DISTINCT语句
 6. 视图定义有嵌套查询，且内层查询涉及到导出本视图的基本表
 7. 不允许更新的视图上定义的视图 
+
 ### 3.5.4 视图的用途
 1. 视图能简化用户的操作
 2. 视图可以使用户多角度看待同一数据
@@ -1745,6 +1753,7 @@ $$WHERE \ F$$
 4. 视图能对数据提供安全保护 
 
 ## 3.6 数据控制语言(DCL)
+
 ### 3.6.1 授权 
 - [x] 语法 
 > GRANT {ALL PRIVILEGES|<权限>[,<权限>... ...]} [ON <对象类型> <对象名>] TO {PUBLIC|<用户>[,<用户>]... ...} [WITH GRANT OPTION]; 
