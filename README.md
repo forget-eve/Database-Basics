@@ -2188,3 +2188,206 @@ $$;
     <span>Oracle MSSQL Mysql若干区别</span>
   </p>
 </P>
+
+# 第四章关系数据库设计理论 
+## 4.1 数据依赖
+### 4.1.1 关系模式中的数据依赖 
+- [x] 完整的关系模式的描述：R(U,D,DOM,F) 
+	- R关系名 
+	- U属性组 
+	- D是U的取值范围，是域的集合
+	- DOM是属性向域映象的集合
+	- F是属性间数据的依赖关系集合 
+- [x] 关系模式是静态的、稳定的；关系是动态的，不同时刻关系模式中的关系可能不同，但关系都必须满足关系模式中数据依赖关系集合F指定的完整性约束 
+- [x] 影响数据库模式设计的主要是U和F，所以一般关系模式简化为：R(U,F)
+
+### 4.1.2 数据依赖对关系模式的影响
+- [x] 数据依赖有:
+	> 函数依赖、多值依赖和连接依赖  
+
+- [X] 一个关系模式示例 
+> U＝{Sno,Sdept,Mname,Cname,Grade}
+>
+> F＝{Sno->Sdept, Sdept->Mname, (Sno,Cname)->Grade}
+- [X] 该关系模式存在如下问题 : 
+	- 数据冗余太大：系主任名字重复出现，和所有学生的所有课程成绩次数一样
+	- 更新异常：更换系主任必须修改每一个学生信息
+	- 插入异常：刚成立的系如果还没有招生就无法存储系主任信息
+	- 删除异常：某个系的学生全部毕业删除时会丢失系主任信息 
+
+### 4.1.3 相关概念 
+- [x] 函数依赖
+	> R(U)是一个关系模式，U是R的属性集合，X和Y是U的子集，对于R(U)的任意一个可能的关系r，如果r中不存在两个元组w，v，使得w[X]=v[X]而w[Y]<>v[Y]，称X函数决定Y，或Y函数依赖于X，记X→Y 
+
+- [x] 平凡的和非平凡的函数依赖
+	> 关系模式R(U)， X和Y是U的子集，如果X→Y，且 $Y \not \subset X$ ，则称X→Y是非平凡的函数依赖，否则称平凡的函数依赖，我们讨论的都是非平凡的函数依赖 
+
+- [x] 完全函数依赖和部分函数依赖
+	> 关系模式R(U)，如果X→Y，且对于任意的X的真子集X'都有 $X' \not \rightarrow Y$ ，则称Y完全函数依赖于X，记 $X \xrightarrow{f} Y$ 。反之则Y不完全依赖于X,称Y部分依赖于X，记 $X \xrightarrow{p} Y$ 
+
+- [x] 传递函数依赖
+	> 关系模式R(U)，如果X→Y，Y→Z，且 $Y \not \rightarrow X$ ，则称Z传递函数依赖于X，记 $X \xrightarrow{f} Z$  
+
+- [x] 码的重新定义
+	> 关系模式R(U,F)，K为属性组合，若 $K \xrightarrow{f} U$ ，则K是一个候选码。 
+
+## 4.2 范式 
+- [x] 范式定义
+	> 数据依赖满足某种条件级别的关系模式的集合 
+
+- [x] 目前共6种范式:
+	> $1NF \supset 2NF \supset 3NF \supset BCNF \supset 4NF \supset 5NF$
+
+### 4.2.1 第一范式（1NF）
+- [x] 1NF定义
+	> 如果一个关系模式R的所有属性都是原子的，即不可再分的基本数据项，则 $R \in 1NF$
+
+> 例：SCL(S#,SN,SA,CLS,MON,C#,CN,CRD,GR)
+>
+> 属于1NF它有以下问题:
+> > 数据冗余大，如MON，CRD等
+> >
+> > 插入异常，当无课程时学生信息无法插入
+> >
+> > 删除异常，当某个学生的选课信息全部删除时无法保留学生基本信息 
+
+> SCL存在的函数依赖关系
+> > $(S#,C#) \xrightarrow{f} GR$
+> >
+> > $(S#,C#) \xrightarrow{p} SN \ S# \xrightarrow{f} SN$
+> >
+> > $(S#,C#) \xrightarrow{p} SA \ S# \xrightarrow{f} SA$
+> >
+> > $(S#,C#) \xrightarrow{p} CLS \ S# \xrightarrow{f} CLS$
+> >
+> > $(S#,C#) \xrightarrow{p} CN \ C# \xrightarrow{f} CN$
+> >
+> > $(S#,C#) \xrightarrow{p} CRD \ C# \xrightarrow{f} CRD$
+> >
+> > $CLS \rightarrow MON \ S# \xrightarrow{t} MON$
+
+### 4.2.2 第二范式（2NF）
+- [x] 2NF定义
+	> 如果一个关系模式 $R \in 1N$ F，并且每一非主属性都完全依赖于R的码，则 $R \in 2NF$ 。
+	>
+	> 显然码只包含一个属性的R如果是1NF，则必是2NF
+
+> 例：S_L(S#,SN,SA,CLS,MON) C(C#,CN,CRD) S_C(S#,C#,GR)都属于2NF
+>
+> 存在问题：
+> > 数据冗余大，如MON
+> >
+> > 插入异常，无学生信息无法插入班长信息
+> >
+> > 删除异常，当学生的信息删除无法保存班长
+> >
+> > 函数依赖关系：
+> >
+> > $S# \xrightarrow{f} SA$
+> >
+> > $S# \xrightarrow{f} CLS$
+> >
+> > $S# \xrightarrow{f} SN$
+> >
+> > $CLS \rightarrow MON \ S# \xrightarrow{t} MON$
+> >
+> > $C# \xrightarrow{f} CN$
+> >
+> > $C# \xrightarrow{f} CRD$
+> >
+> > $(S#,C#) \xrightarrow{f} GR$
+
+### 4.2.3 第三范式（3NF）
+- [x] 3NF定义
+	> 如果一个关系模式R中不存在非主属性对码的传递依赖，则 $R \in 3NF$
+
+> 例：S(S#，SN，SA，CLS)
+> > L(CLS，MON)
+> > 
+> > C(C#，CN，CRD)
+> >
+> > S_C(S#，C#，GR)都属于3NF
+
+### 4.2.4 BC范式（BCNF）
+- [x] BCNF定义
+	> 如果一个关系模式 $R(U,F) \in 1NF$ ，对R中的任意一个非平凡的函数依赖X→Y，X都含有候选码，则 $R \in BCNF$   
+
+> 例：STC(S,T,C) S学生 T教师 C课程
+> > (S,C)→T
+> >
+> > (S,T)→C
+> >
+> > T→C
+> 
+> 所以STC不是BCNF
+> > 分解为:ST(S,T),TC(T,C)
+> >
+> > 则都属于BCNF 
+
+### 4.2.5 第四范式（4NF）
+- [x] 多值依赖
+	> 关系模式R(U)属性集U，X、Y和Z是U不相交的子集，且Z＝U－X－Y，若关系模式R的任一关系r对于X的一个给定值，存在Y的一组值与之对应，且Y的这一组值与Z无关，称Y多值依赖于X，记X→→>Y。当Z非空时称非平凡的多值依赖 
+
+- [x] 4NF定义
+	> 如果一个关系模式 $R(U,F) \in 1NF$ ，对R中的任意一个非平凡的多值依赖X→→Y，X都含有候选码，则 $R \in 4NF$  
+	>
+	> 第四范式一般尽量将一个3元关系分解为两个2元关系，若不能在不丢失信息的前提下分解则称已达4NF。
+
+> 例：CTX(C,T,X) C 课程, T 教师, X 参考书
+> > 候选码：(C,T,X)
+> > 
+> > C→→T，C→→X，C不是候选码，故CTX不属于4NF
+> >
+> > 分解为CT(C,T)，CX(C,X)，则都满足4NF 
+
+<P align="center">
+  <img src="./img/4NF.png" alt="4NF">
+  <p align="center">
+    <span>4NF</span>
+  </p>
+</P>
+
+### 4.2.6 第五范式（5NF）
+- [x] 定义
+	> 关系模式R，其属性集 $U,X_1,X_2,...,X_n$ 分别为U的子集， $ \bigcu pX_i＝U$ ，如果对于R的每一个关系r都有 $r＝ \infty X_i$ ，则称连接依赖(JD)在关系模式R上成立，记为 $*(X_1,X_2,...,X_n)$ ,若某个 $X_i$ 就是R，称平凡的连接依赖。
+
+<P align="center">
+  <img src="./img/关系AFP.png" alt="关系AFP">
+</P>
+
+<P align="center">
+  <img src="./img/关系AFP1.png" alt="关系AFP1">
+  <p align="center">
+    <span>示例：关系AFP</span>
+  </p>
+</P>
+
+- [x] 定义
+	> 如果一个关系模式 $R(U,F) \in 1NF$ ，对R中的任意一个连接依赖都都由候选码蕴涵，则 $R \in 5NF$
+	>
+	> 第五范式建议，最好把现有的三元关系分解为3个二元关系，但某些情况下不可以再分解，则称已处于5NF，若某个关系所有的链接依赖要么是平凡的，要么是每个分解都蕴含候选键，则称满足5NF。
+
+<P align="center">
+  <img src="./img/5NF.png" alt="5NF">
+  <p align="center">
+    <span>5NF</span>
+  </p>
+</P>
+
+## 4.3 关系模式的规范化  
+### 4.3.1 关系模式的规范化步骤
+
+<P align="center">
+  <img src="./img/关系模式的规范化步骤.png" alt="关系模式的规范化步骤">
+  <p align="center">
+    <span>关系模式的规范化步骤</span>
+  </p>
+</P>
+
+### 4.3.2 关系模式的分解 
+- [x] 关系模式的规范化
+	> 通过对关系模式的分解来实现的
+	>
+	> 把低级别的关系模式分解为高级别的关系模式
+	>
+	> 分解不唯一，只有保证分解后的关系模式与原关系模式等价，才有意义 
