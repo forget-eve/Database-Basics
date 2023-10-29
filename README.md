@@ -2252,19 +2252,19 @@ $$;
 > > 删除异常，当某个学生的选课信息全部删除时无法保留学生基本信息 
 
 > SCL存在的函数依赖关系
-> > $(S#,C#) \xrightarrow{f} GR$
+> > $(S＃,C＃) \xrightarrow{f} GR$
 > >
-> > $(S#,C#) \xrightarrow{p} SN \ S# \xrightarrow{f} SN$
+> > $(S＃,C＃) \xrightarrow{p} SN \ S＃ \xrightarrow{f} SN$
 > >
-> > $(S#,C#) \xrightarrow{p} SA \ S# \xrightarrow{f} SA$
+> > $(S＃,C＃) \xrightarrow{p} SA \ S＃ \xrightarrow{f} SA$
 > >
-> > $(S#,C#) \xrightarrow{p} CLS \ S# \xrightarrow{f} CLS$
+> > $(S＃,C＃) \xrightarrow{p} CLS \ S＃ \xrightarrow{f} CLS$
 > >
-> > $(S#,C#) \xrightarrow{p} CN \ C# \xrightarrow{f} CN$
+> > $(S＃,C＃) \xrightarrow{p} CN \ C＃ \xrightarrow{f} CN$
 > >
-> > $(S#,C#) \xrightarrow{p} CRD \ C# \xrightarrow{f} CRD$
+> > $(S＃,C＃) \xrightarrow{p} CRD \ C＃ \xrightarrow{f} CRD$
 > >
-> > $CLS \rightarrow MON \ S# \xrightarrow{t} MON$
+> > $CLS \rightarrow MON \ S＃ \xrightarrow{t} MON$
 
 ### 4.2.2 第二范式（2NF）
 - [x] 2NF定义
@@ -2283,19 +2283,19 @@ $$;
 > >
 > > 函数依赖关系：
 > >
-> > $S# \xrightarrow{f} SA$
+> > $S＃ \xrightarrow{f} SA$
 > >
-> > $S# \xrightarrow{f} CLS$
+> > $S＃ \xrightarrow{f} CLS$
 > >
-> > $S# \xrightarrow{f} SN$
+> > $S＃ \xrightarrow{f} SN$
 > >
-> > $CLS \rightarrow MON \ S# \xrightarrow{t} MON$
+> > $CLS \rightarrow MON \ S＃ \xrightarrow{t} MON$
 > >
-> > $C# \xrightarrow{f} CN$
+> > $C＃ \xrightarrow{f} CN$
 > >
-> > $C# \xrightarrow{f} CRD$
+> > $C＃ \xrightarrow{f} CRD$
 > >
-> > $(S#,C#) \xrightarrow{f} GR$
+> > $(S＃,C＃) \xrightarrow{f} GR$
 
 ### 4.2.3 第三范式（3NF）
 - [x] 3NF定义
@@ -2349,7 +2349,7 @@ $$;
 
 ### 4.2.6 第五范式（5NF）
 - [x] 定义
-	> 关系模式R，其属性集 $U,X_1,X_2,...,X_n$ 分别为U的子集， $ \bigcu pX_i＝U$ ，如果对于R的每一个关系r都有 $r＝ \infty X_i$ ，则称连接依赖(JD)在关系模式R上成立，记为 $*(X_1,X_2,...,X_n)$ ,若某个 $X_i$ 就是R，称平凡的连接依赖。
+	> 关系模式R，其属性集 $U,X_1,X_2,...,X_n$ 分别为U的子集， $ \bigcup X_i＝U$ ，如果对于R的每一个关系r都有 $r＝ \infty X_i$ ，则称连接依赖(JD)在关系模式R上成立，记为 $*(X_1,X_2,...,X_n)$ ,若某个 $X_i$ 就是R，称平凡的连接依赖。
 
 <P align="center">
   <img src="./img/关系AFP.png" alt="关系AFP">
