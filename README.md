@@ -3059,7 +3059,528 @@ END
 	> > - [ ] 属性不能再具有需要描述的性质 
 	> > - [ ] 属性不能与其他实体具有联系
 
+<P align="center">
+  <img src="./img/概念结构设计.png" alt="概念结构设计">
+  <p align="center">
+    <span>数据抽象与局部视图设计</span>
+  </p>
+</P>
+
+### 6.3.3 视图的集成 
+- [x] 合并分E－R图，生产初步E－R图，合并分E－R图过程中存在的冲突有 :
+	> - 属性冲突：属性域冲突、属性单位冲突
+	> - 命名冲突：同名异义，异名同义
+	> - 结构冲突：同一对象抽象不同，同一实体属性不同，联系类型不同
+- [x] 修改与重构，生成基本E－R图。初步E－R图消除不必要冗余后得到基本E－R图。视图集成后形成整体概念结构，必须满足
+	> - 结构内部必须具有一致性，不能有互相矛盾的表达
+	> - 整体结构必须能反映原来的每一个视图结构，包括实体，属性和联系
+	> - 结构能满足需求分析阶段的所有需求
+
+<P align="center">
+  <img src="./img/视图的集成.png" alt="视图的集成">
+  <p align="center">
+    <span>视图的集成</span>
+  </p>
+</P>
+
 ## 6.4 逻辑结构设计 
+- [x] 逻辑结构设计的任务
+	> - 将概念结构转化为某一数据模型 
+- [x] 逻辑结构设计的步骤 
+	> - 将概念模型转化为一般的关系、层次、网状模型。
+	> - 将转化来的关系、层次和网状模型向特定的DBMS支持下的数据模型转换。
+	> - 对数据模型进行优化
+
+### 6.4.1 E－R图向数据模型转换
+- [x] 转化的原则 
+	> - 一个实体型转化为一个关系模式。
+	> - 一个m：n的联系转化为一个关系模式，码为各实体码组合。
+	> - 一个1：n的联系转化为一个独立的关系模式，码为n端实体码；也可以与n端关系模式合并。
+	> - 一个1：1的联系转化为一个独立的关系模式，每个实体的码均是候选码；也可以与任一端关系模式合并。
+	> - 三个及三个以上实体间的一个多元联系转化为一个关系模式。
+	> - 同一实体集的实体间的联系即自联系，也可按上面的联系方式处理。
+	> - 具有相同码的各模式可以合并。
+
+<P align="center">
+  <img src="./img/转化的原则.png" alt="转化的原则">
+  <p align="center">
+    <span>转化的原则</span>
+  </p>
+</P>
+
+### 6.4.2 数据模型的优化 
+- [x] 确定数据依赖
+	> - 对各个关系模式间的数据依赖进行极小化处理，消除冗余的联系。
+	> - 按照数据依赖理论对关系模式逐一进行分析考察是否存在部分函数依赖、传递函数依赖、多值依赖等，确定各关系模式分别属于第几范式。
+	> - 按照需求分析阶段得到的各种应用对数据处理的要求，分析这样的应用环境这些关系模式是否合适，确定是否要对它们进行合并和分解。
+	> - 对关系模式进行必要的分解和合并。
+
+### 6.4.3设计用户子模式 
+- [x] 使用更符合用户习惯的别名;
+- [x] 针对不同级别的用户，定义不同的外模式，以满足系统对安全性的要求;
+- [x] 简化用户对系统的使用 ;
+
 ## 6.5 数据库物理设计 
+
+### 6.5.1 确定数据库的物理结构 
+- [x] 确定数据的存储结构。综合考虑存取时间、存储空间利用率和维护代价。聚簇的使用条件：
+	> - 通过聚簇码进行访问是该关系的主要应用。
+	> - 对应与每个聚簇码的平均元组数既不太少，也不太多。
+	> - 聚簇码值相对稳定，以减少修改码值引起的维护开销
+	- [x] 设计数据存取路径。主要是如何建立索引。
+- [x] 确定数据存放位置。主要是日志/数据、索引/数据的存放尽量分开。
+- [x] 确定系统配置。打开对象数、缓冲区大小、时间片大小、锁数目等
+
+<P align="center">
+  <img src="./img/确定数据库的物理结构.png" alt="确定数据库的物理结构">
+  <p align="center">
+    <span>确定数据库的物理结构</span>
+  </p>
+</P>
+
+### 6.5.2 评价物理结构 
+- [x] 需要权衡的因素：
+	> - 时间效率
+	> - 空间效率
+	> - 维护代价
+	> - 用户需求
+- [x] 评价数据库的方法完全依赖于选用的DMBS
+
 ## 6.6 数据库实施 
+- [x] 数据库实施的主要工作包括 
+	> - 用DDL定义数据库结构
+	> - 组织数据入库
+	> - 编制调试应用程序
+	> - 数据库试运行 :包括功能测试和性能测试 
+
+<P align="center">
+  <img src="./img/数据库实施 .png" alt="数据库实施 ">
+  <p align="center">
+    <span>数据库实施 </span>
+  </p>
+</P>
+
 ## 6.7 数据库运行维护
+- [x] 本阶段主要是DBA的工作 
+	> 1. 数据库的转储和恢复 
+	> 2. 数据库的安全性完整性控制
+	> 3. 数据库性能的监督、分析和改进
+	> 4. 数据库的重组织和重构造 
+	> > - 数据库重组：不会改变数据逻辑和物理结构，只是重新安排存储，回收垃圾等
+	> > - 数据库重构：应用需求改变，要求改变逻辑设计，如表结构等，就是重构
+	> > - 数据库系统重新设计：数据库重构的程度是十分有限的，当重构的代价太大时，就表示现有的数据库系统的生命周期已经结束，应该重新设计新的数据库系统了
+
+# 第七章 关系数据库管理系统实例
+
+## 7.1 关系数据库管理系统产品概述 
+- [x] 对关系数据库支持的三阶段
+	> - 70年代，支持数据结构和基本数据操作(选择、投影、连接等)，DBASE等。
+	> - 80年代，支持国际标准SQL，甚至超出(TSQL，PL/SQL),Oracle等。
+	> - 90年代，加强安全性和完整性
+- [x] 运行环境发展的三阶段 
+	> - 一般多为多用户系统的大中小型机器上运行的单机RDMBS，微机上的均为单用户的，因为微机DOS是单用户操作系统
+	> - 两个方向发展：一是提高移植性，使之在多种硬件和操作系统上；二是数据库联网，向分布式系统发展，支持多网络协议
+	> - 在网络环境下，分布式数据库和客户/ 服务器结构数据库系统的推出。追求数据库的开放性(可移植性portability、可连接性connectivity、可伸缩性scalability)。
+- [x] RDBMS的系统构成变化
+	> - 早期的RDBMS主要实现DDL、DML、DCL等基本操作以及数据存储组织、并发控制、安全性完整性检查、系统恢复、数据库的重组和重构 
+	> - 后期的RDBMS以数据管理的基本功能为核心，开发外围软件系统，包括FORMS、REPORT、GRAPHICS等
+- [x] RDBMS对应用的支持 
+	> - 第一阶段主要是用于信息管理，对联机速度要求不高
+	> - 第二阶段主要针对联机事务处理，一提高事务吞吐量；二缩短联机响应时间
+	> - RDBMS的改善技术主要有： 
+	> > - 性能
+	> > - 可靠性 
+
+## 7.2 ORACLE
+
+### 7.2.1 Oracle公司简介 
+- [x] 成立于1977年
+- [x] 1979年，Oracle第一版是世界上首批商用RDBMS之一。
+- [x] 1992 Oracle7、1997年 Oracle8 、随后Oracle 9i 、Oracle 10g 
+
+### 7.2.2 Oracle产品特性 
+- [x] 兼容性(compatibility)：兼容其他厂商的数据库兼容
+- [x] 可移植性(portability)：可以安装70多种机器，多种操作系统
+- [x] 可联结性(connectability)：支持多种网络协议，如TCP/IP、DECnet等
+- [x] 高生产率(high productivity)：提供PRO*C 、Forms等接口与工具。
+- [x] 开放性：前述特性保障了其开放性
+
+### 7.2.3 Oracle数据库服务器产品 
+- [x] 标准服务器 
+	> - 多进程、多线程体系结构
+	> - 为提高性能改进核心技术：无限制行级锁、无竞争查询、多线程顺序号产生
+	> - 高可用性
+	> - SQL的实现：符合ISO的SQL标准 
+- [x] 并行服务器选件(Oracle Parallel Server)和并行查询(Parallel query Option)
+- [x] 分布式选件(distributed Option)
+- [x] 过程化选件(Procedural option)：提供用户自定义数据库对象
+
+### 7.2.4 Oracle工具
+- [x] Developer/2000 
+	> - ORACLE Forms：屏幕工具
+	> - ORACLE Reports：报表工具
+	> - ORACLE Graphics：图形工具，如直方图等。
+	> - ORACLE Book ：用于生产联机文档 
+- [x] Designer/2000
+	> - BPR ：用于过程建模
+	> - Modellers：用于系统设计与建模
+	> - Generators ：应用生产器
+- [x] Discoverer/2000：OLAP工具，应用于数据仓库
+- [x] Oracle Office：办公自动化。
+- [x] SQL DBA：用户动态性能监控。
+- [x] ORACLE 预编译器 Proc*C
+- [x] ORACLE调用接口OCI
+
+### 7.2.5 Oracle连接产品 
+- [x] SQL *Net：负责Client和Server的通讯
+- [x] Oracle多协议转换器
+- [x] Oracle 开放式网关：利用透明网关和过程化网关，可以实现对其他数据库的直接
+
+### 7.2.6 Oracle数据仓库解决方案 
+- [x] OracleOLAP 
+- [x] Oracle Express Server
+- [x] Oracle Express Objects
+- [x] Oracle Express Analyzer 
+
+### 7.2.7 Oracle 的Internet解决方案 
+- [x] Oracle WebServer 2.0 
+
+## 7.3 Sybase
+
+### 7.3.1 Sybase公司简介 
+- [x] 1984年成立，INGRES大学版本的主要设计人员之一Dr.Robert Epstein是Sybase的创始人之一
+- [x] 致力于C/S数据库体系结构以满足OLTP应用要求，1987年推出SYBASE SQL Server 
+- [x] Sybase 11.0、11.5、11.9、12.0、12.5都是很优秀的版本 
+
+### 7.3.2 Sybase关系数据库产品 
+- [x] 数据库服务器：
+	> - Sybase SQL Server 	– Sybase MPP
+	> - Sybase IQ		– Sybase Anywhere
+- [x] 中间件：
+	> - Server			 – Open Client
+	> - Open Server		 – OmniCONNECT
+	> - ObjectCONNECT for C++ Directconnect
+- [x] 工具：
+	> - PowerBuilder		 – S－Designor
+	> - Optima＋＋		 – NetImpact Studio
+	> - Internet Developer Toolkit for PowerBuilder
+
+### 7.3.3 Sybase数据库服务器(Adaptive Server) 
+- [x] SQL Server：RDBMS，负责高速计算、数据管理、事务管理。
+	> - 单进程多线程体系结构
+	> - 高性能
+	> - 数据完整性检查和控制
+	> - 加强安全保密功能，基于角色管理，提供审计支持分布式查询和更新
+- [x] 备份服务器(backup server)：附属于SQL Server，完成对数据的备份工作 
+	> - 支持联机备份：备份时不影响SQL Server处理
+	> - 支持转储分解：允许使用多台外设进行转储。
+	> - 支持异地转储：DBA可以管理多个远程服务器的备份和装载。
+	> - 支持限值转储：日志转储可以在限值事件触发下自动完成。
+- [x] SYBASE MPP：多处理器并行服务器产品
+- [x] SYBASE IQ：高性能决策支持和交互式数据集成产品。
+- [x] SYBASE SQL  Anywhere：基于PC的具有SQL功能的分布式数据库管理系统 
+
+### 7.3.4 Sybase开发工具 
+- [x] PowerBuilder：基于图形界面的C/S前端应用开发工具。
+- [x] PowerDesigner：一组紧密集成的计算机辅助软件工程(CASE)工具，用于数据库的分析、设计维护、建立文档和创建数据库等功能。
+- [x] PowerJ：开发基于java应用的快速开发工具。
+- [x] Power++(Optima++)：RAD C++ C/S和Internet面向对象的开发工具。
+- [x] SQL Manager：可视化的系统和数据库管理工具。 
+
+### 7.3.5 Sybase中间件 
+- [x] Open Client/Open Server：构成Sybase开放式C/S互连基础。Open Client用于建立有效的前端应用；Open Server是一个服务构造工具，用于集成企业的资源与服务。
+- [x] Jaguar CTS：是jaguar组件事务服务器(component transaction server)简称，专门为NetOLTP应用设计的事务服务器
+- [x] Replication Server：复制服务器。
+- [x] OmniCONNECT：不同数据库管理系统(都是sybase)之间完全透明的数据集成。
+- [x] DirectConnect：用于同非Sybase数据源建立联系的访问服务器。 
+
+### 7.3.6 Sybase数据仓库解决方案
+- [x] Sybase Web. Works
+
+## 7.4 INFORMIX数据库
+- [x] 1988年Infomix推出第一代数据库服务器INFORMIX－TURBO后来被IBM收购。
+
+## 7.5 DB2数据库
+- [x] DB2是IBM的数据库管理系统，起源于System R和System R*。
+
+## 7.6 INGRES/PostgreSQL数据库
+- [x] INGRES公司成立于1980。其技术源于加州伯克利大学。PostgreSQL的前身。
+- [x] PostgreSQL 可以说是最富特色的自由数据库管理系统，过于学院味，因为首先它的目的是数据库研究，因此不论在稳定性，性能还是使用方便方面都比商用数据库欠缺。
+
+## 7.7 MS-SQLSERVER数据库
+- [x] MS-SQL Server是window平台最流行的中型关系数据库DBMS。
+
+## 7.8 MySQL数据库
+- [x] Mysql数据库是非常流行的开放源码DBMS，以性能卓越而著称，可以运行与各种OS平台，为了性能而较大多数DBMS精简。
+
+## 7.9 OpenGauss等华为DBMS产品
+- [x] openGauss是一款高性能、高安全、高可靠的企业级开源关系型数据库
+- [x] GaussDB(for MySQL)是企业级高扩展海量存储分布式云数据库，完全兼容 MySQL，支持1主15只读的高扩展性。
+- [x] GaussDB(for openGauss)与openGauss基于同内核演进。是新一代企业分布式云数据库。
+- [x] 这三款数据库都是华为全自研企业级OLTP数据库DBMS，是华为鲲鹏生态的重要组成部分
+
+### 系统架构
+
+<P align="center">
+  <img src="./img/系统架构.png" alt="系统架构">
+  <p align="center">
+    <span>系统架构</span>
+  </p>
+</P>
+
+### openGauss体系架构
+
+<P align="center">
+  <img src="./img/openGauss体系架构.png" alt="openGauss体系架构">
+  <p align="center">
+    <span>openGauss体系架构</span>
+  </p>
+</P>
+
+### openGauss/PostgreSQL关键技术对比
+
+<P align="center">
+  <img src="./img/关键技术对比.png" alt="openGauss/PostgreSQL关键技术对比">
+  <p align="center">
+    <span>openGauss/PostgreSQL关键技术对比</span>
+  </p>
+</P>
+
+> - openGauss是衍生自PostgreSQL-XC，单机逻辑架构与PG接近
+> - openGauss和PG在架构和关键技术上有根本性差异，尤其是存储引擎和优化器两大核心能力
+
+### 运行环境
+- [x] 支持的硬件平台
+	> 支持运行在鲲鹏服务器和通用的x86服务器上：
+	> > - 支持鲲鹏服务器和基于x86_64的通用PC服务器。
+	> > - 支持本地存储(SATA、SAS、SSD)。
+	> > - 支持千兆、万兆Ethernet网络。
+- [x] 支持的操作系统
+	> - openEuler release 20.03 (LTS) on ARM。(推荐)
+	> - openEuler 20.03 on X86-64。
+	> - CentOS 7.6 on X86-64。
+
+### 技术指标
+
+<P align="center">
+  <img src="./img/技术指标.png" alt="技术指标">
+  <p align="center">
+    <span>技术指标</span>
+  </p>
+</P>
+
+### 自研占比
+<P align="center">
+  <img src="./img/自研占比.png" alt="自研占比">
+  <p align="center">
+    <span>自研占比</span>
+	</p>
+</P>
+
+### 数据库物理结构
+> 数据目录结构(默认：GAUSSHOME=/opt/software/openGauss)
+
+<P align="center">
+  <img src="./img/数据库物理结构.png" alt="数据库物理结构">
+  <p align="center">
+    <span>数据库物理结构</span>
+	</p>
+</P>
+
+### gsql命令行工具常用命令
+
+```gsql命令行工具常用命令
+$gsql –r  student
+\h   SQL命令语法,
+\?   以\开始的命令列表
+\l	list所有数据库
+\dn  list 所有schema
+\dt	list当前库所有table
+\dTS 列出所有data type
+\du   list 角色（role/user）
+\dd  [PATTERN]  列出对象的描述
+\c [DBNAME|- USER] 连接数据库，或切换当前身份到USER
+```
+
+### 客户端工具data-studio
+- [x] 首先需要安装 jdk或jre
+	> 推荐[Java 8](https://www.java.com/zh-CN/download/manual.jsp)
+- [x] 下载[data studio](https://opengauss.obs.cn-south-1.myhuaweicloud.com/3.0.0/DataStudio_win_64.zip)
+	> 解压运行即可
+- [x] [使用手册](https://opengauss.obs.cn-south-1.myhuaweicloud.com/3.0.0/Data%20Studio%20%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.pdf)
+
+# 第八章 现代数据库技术及进展
+
+## 8.1 数据库发展概述 
+
+<P align="center">
+  <img src="./img/数据库发展概述.png" alt="数据库发展概述">
+  <p align="center">
+    <span>数据库发展概述</span>
+  </p>
+</P>
+
+## 8.2 数据库技术与其他技术的结合 
+
+### 8.2.1 分布式数据库 
+- [x] 分布式数据库特点： 
+	> - 数据的物理分布性
+	> - 数据的逻辑整体性
+	> - 数据的分布独立性(透明性)：除了物理独立性、逻辑独立性，用户不必关心数据的分布细节
+	> - 场地自治与协调：各结点能执行局部应用请求，也能通过网络处理全局请求
+	> - 数据的冗余及冗余透明性：适当冗余提高系统效率和可靠性，冗余对用户透明
+- [x] 分布式数据库优点：
+	> - 分布式控制：减少通信开销
+	> - 数据共享：全局和局部
+	> - 可靠性和可用性加强：可以根据冗余数据恢复某一场地数据
+	> - 性能改善：数据分片，减少资源竞争
+	> - 可扩充性好：因分布独立性，不会影响用户程序
+- [x] 分布式数据库缺点：
+	> - 复杂：主要是自治与协调。
+	> - 开销大：硬件、通信、冗余开销、安全性、完整性和并发控制开销
+- [x] 分布式数据库体系结构：(若干局部数据模式＋一个全局数据模式)
+	> - 全局数据模式
+	> > - 全局外模式
+	> > - 全局概念模式
+	> > - 分片模式：水平、垂直、混合分片；完全性、可重构性、不相交性
+	> > - 分布模式
+	> 
+	> - 局部数据模式 
+	> > - 局部外模式、局部概念模式、局部内模式
+	> 
+	> - 四级映象
+	> > - 全局外模式与全局概念模式之间对应关系
+	> > - 全局概念模式(关系)与全局分片模式(片断)之间对应关系
+	> > - 全局分片模式(片断)与全局分布模式(网络结点)之间的对应关系。
+	> > - 全局分布模式与局部概念模式之间的映射
+
+ ### 8.2.2 并行数据库
+- [x] 并行计算机体系类型：
+	> - 紧耦合全对称多处理器(SMP)所有CPU共享内存与磁盘(share memory)
+	> - 松耦合群集机系统，所有CPU共享磁盘(share disk)
+	> - 大规模并行处理(MPP)，所有CPU有自己内存和磁盘无共享资源(share nothing)
+- [x] 相应并行数据库的体系结构：
+	> - 共享内存(share memory)(SMP)
+	> - 共享磁盘(share disk)
+	> - 无共享资源(share nothing)
+- [x] 并行数据库的粒度：
+	> - 不同事务间并行
+	> - 同一事务不同查询间并行
+	> - 同一查询不同操作间并行
+	> - 同一操作内并行 
+
+### 8.2.3 多媒体数据库 
+- [x] 主要特征：
+	> - 能够表示多种媒体数据。
+	> - 能够协调处理各种媒体数据。
+	> - 应提供比传统数据管理系统更强的适合非格式化数据查询的搜索功能。
+	> - 应提供特种事务处理与版本管理能力。
+
+### 8.2.4 主动数据库
+- [x] 目标是提供紧急情况及时反应能力，同时提高数据库模块化程度。
+- [x] 通常采用方法是在传统数据库中嵌入ECA(事件－条件－动作)规则。
+- [x] 要解决的问题：
+	> - 数据模型和知识模型
+	> - 执行模型
+	> - 条件检测
+	> - 事务调度
+	> - 体系结构
+	> - 系统效率  
+
+### 8.2.5 对象——关系数据库
+- [x] 对象——关系数据库兼有关系数据库和面向对象数据库的两方面特征。即在关系数据库基础上提供一下功能：
+	> - 允许扩充基本数据模型
+	> - SQL中支持复杂对象
+	> - 支持子类对超类的特性继承
+	> - 提供通用规则系统
+
+## 8.3 现代数据库技术研究
+- [x] web数据库
+	> 在互联网中以web查询接口方式访问的数据库资源。
+- [x] XML数据库
+	> 关系数据库和XML结合的一个重要方向
+- [x] 数据仓库
+	> 从传统的事务处理到决策、统计型发展的数据库技术。
+	>
+	> 数据库处理分两类：操作型(OLTP)和分析型(OLAP)
+- [x] 主动数据库
+	> 结合人工智能和面向对象技术而产生的新技术。
+- [x] 嵌入式移动数据库
+	> 微型化方向发展，应用于嵌入式系统和移动通信领域。
+- [x] 空间和时态数据库
+	>地理信息系统在计算机区里存储介质上存储的应用相关的地理空间数据的总和。体现了随时间的变化关系。
+- [x] 内存数据库
+	> 内容价格大幅度降低，对时间要求的苛刻，使得数据库常驻内存。
+- [x] 物联网数据库
+	> 互联网基础上的延伸和扩展的网络，物品与物品的信息交换和通信要求“数据海”—物联网数据库
+- [x] 云数据库
+	> 广义云计算的一种高级应用
+- [x] 知识与智能数据库
+	> 知识工程中结构化、易操作全面有组织的知识集群
+
+### Redis
+- [x] 一个开源的KV存储解决方案，用于构建高性能，可扩展的Web应用程序。
+	> - Redis将其数据完全保存在内存中，仅使用磁盘进行持久化。
+	> - 与其它键值数据存储相比，Redis有一组相对丰富的数据类型
+	> - Redis可以将数据复制到任意数量的从机中
+
+#### Redis cluster结构
+<P align="center">
+  <img src="./img/Redis-cluster结构.png" alt="Redis cluster结构">
+  <p align="center">
+    <span>Redis cluster结构</span>
+  </p>
+</P>
+
+#### Redis cluster结构
+- [x] 异常快 
+	> 每秒约110000次 SET操作，81000次GET操作
+- [x] 丰富的数据类型
+	> string，hash，list，set及zset
+- [x] 操作具有原子性
+	> 确保如果两个客户端并发访问，Redis服务器能接收更新的值。
+- [x] 多实用工具 
+	> Redis是一个多实用工具，可用于多种用例，如：缓存，消息队列，应用程序中的任何短期数据(web应用程序中的会话，网页命中计数等)
+
+#### Redis安装
+##### Window 下安装
+> - [下载地址](https://github.com/MSOpenTech/redis/releases)。
+> - 打开一个 `cmd` 窗口,使用 `cd` 命令切换目录到 `C:\redis` 运行 `redis-server.exe redis.windows.conf` 。
+
+###### 利用redis-cli命令测试
+- [x] 另启一个cmd窗口。
+- [x] 切换到 `redis` 目录下运行
+
+```cmd
+redis-cli.exe -h 127.0.0.1 -p 6379 。
+```
+
+> - 设置键值对 `set myKey abc`
+> - 取出键值对 `get myKey`
+
+##### Linux安装
+> [下载地址](http://redis.io/download)
+
+##### Redis PHP 字符串实例
+> [PHP redis 驱动下载地址](https://github.com/phpredis/phpredis/releases)
+
+<P align="center">
+  <img src="./img/字符串实例.png" alt="Redis PHP 字符串实例">
+  <p align="center">
+    <span>Redis PHP 字符串实例</span>
+  </p>
+</P>
+
+###### Java 使用 Redis
+> 需要下载驱动包,下载jedis.jar
+
+### OceanBase分布式数据库系统
+- [x] 是一个支持海量数据的高性能分布式数据库系统，实现了数千亿条记录、数百TB数据上的跨行跨表事务，由alibaba核心系统研发部等部门共同完成
+- [x] 设计和实现的时候暂时摒弃了不紧急的DBMS的功能，例如临时表，视图
+- [x] 主要解决数据更新一致性、高性能的跨表读事务、范围查询、join、数据全量及增量dump、批量数据导入
+
+### 现有数据库的弊端
+- [x] 数据和负载增加后添加机器的操作比较复杂，往往需要人工介入；
+- [x] 有些范围查询需要访问几乎所有的分区，例如，按照user_id分区，查询收藏了一个商品的所有用户需要访问所有的分区；
+- [x] 目前广泛使用的关系数据库存储引擎都是针对机械硬盘的特点设计的，不能够完全发挥新硬件(SSD)的能力。
+- [x] Google Bigtable系统虽然解决了可扩展性问题，但往往无法支持事务
