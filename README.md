@@ -3579,8 +3579,50 @@ redis-cli.exe -h 127.0.0.1 -p 6379 。
 - [x] 设计和实现的时候暂时摒弃了不紧急的DBMS的功能，例如临时表，视图
 - [x] 主要解决数据更新一致性、高性能的跨表读事务、范围查询、join、数据全量及增量dump、批量数据导入
 
-### 现有数据库的弊端
+#### 现有数据库的弊端
 - [x] 数据和负载增加后添加机器的操作比较复杂，往往需要人工介入；
 - [x] 有些范围查询需要访问几乎所有的分区，例如，按照user_id分区，查询收藏了一个商品的所有用户需要访问所有的分区；
 - [x] 目前广泛使用的关系数据库存储引擎都是针对机械硬盘的特点设计的，不能够完全发挥新硬件(SSD)的能力。
 - [x] Google Bigtable系统虽然解决了可扩展性问题，但往往无法支持事务
+
+#### 设计思路
+- [x] 在线业务的数据量十分庞大，例如几十亿条、上百亿条甚至更多记录，但最近一段时间（例如一天）的修改量往往并不多，通常不超过几千万条到几亿条，因此，OceanBase采用单台更新服务器来记录最近一段时间的修改增量，而以前的数据保持不变，以前的数据称为基线数据。
+- [x] 基线数据以类似分布式文件系统的方式存储于多台基线数据服务器中，每次查询都需要把基线数据和增量数据融合后返回给客户端。这样，写事务都集中在单台更新服务器上，避免了复杂的分布式事务，高效地实现了跨行跨表事务
+- [x] 更新服务器上的修改增量能够定期分发到多台基线数据服务器中，避免成为瓶颈，实现了良好的扩展性。
+- [x] 更新服务器的硬件配置相对较好，如内存较大，网卡及CPU较好
+- [x] 最近一段时间的更新操作往往总是能够存放在内存中，在软件层面也针对这种场景做了大量的优化。
+
+#### 体系架构
+
+<P align="center">
+  <img src="./img/体系架构.png" alt="体系架构">
+  <p align="center">
+    <span>体系架构</span>
+  </p>
+</P>
+
+#### Oceanbase的组成
+- [x] 客户端
+	> 用户使用OceanBase的方式和MySQL数据库完全相同，支持JDBC、 C客户端访问，等等。基于MySQL数据库开发的应用程序、工具能够直接迁移到OceanBase
+- [x] RootServer
+	> 管理集群中的所有服务器，子表（tablet）数据分布以及副本管理。 RootServer一般为一主一备，主备之间数据强同步
+- [x] UpdateServer
+	> 存储OceanBase系统的增量更新数据。UpdateServer一般为一主一备，主备之间可以配置不同的同步模式。部署时，UpdateServer进程和RootServer进程往往共用物理服务器
+- [x] ChunkServer
+	> 存储OceanBase系统的基线数据。基线数据一般存储两份或者三份，可配置
+- [x] MergeServer
+	> 接收并解析用户的SQL请求，经过词法分析、语法分析、查询优化等一系列操作后转发给相应的ChunkServer或者UpdateServer。如果请求的数据分布在多台ChunkServer上，MergeServer还需要对多台ChunkServer返回的结果进行合并。客户端和MergeServer之间采用原生的MySQL通信协议，MySQL客户端可以直接访问MergeServer
+
+#### 多机房体系机构
+
+<P align="center">
+  <img src="./img/多机房体系机构.png" alt="多机房体系机构">
+  <p align="center">
+    <span>多机房体系机构</span>
+  </p>
+</P>
+
+#### 相关链接
+- http://code.taobao.org/svn/OceanBase/
+- https://github.com/alibaba/oceanbase/
+- https://www.cnblogs.com/LiJianBlog/p/4779934.html
