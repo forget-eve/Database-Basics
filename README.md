@@ -2233,7 +2233,7 @@ $$;
 	> 关系模式R(U)，如果X→Y，且对于任意的X的真子集X'都有 $X' \not \rightarrow Y$ ，则称Y完全函数依赖于X，记 $X \xrightarrow{f} Y$ 。反之则Y不完全依赖于X,称Y部分依赖于X，记 $X \xrightarrow{p} Y$ 
 
 - [x] 传递函数依赖
-	> 关系模式R(U)，如果X→Y，Y→Z，且 $Y \not \rightarrow X$ ，则称Z传递函数依赖于X，记 $X \xrightarrow{f} Z$  
+	> 关系模式R(U)，如果X→Y，Y→Z，且 $Y \not \rightarrow X$ ，则称Z传递函数依赖于X，记 $X \xrightarrow{t} Z$  
 
 - [x] 码的重新定义
 	> 关系模式R(U,F)，K为属性组合，若 $K \xrightarrow{f} U$ ，则K是一个候选码。 
